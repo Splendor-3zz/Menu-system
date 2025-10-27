@@ -7,26 +7,21 @@ async function main() {
 const allUsers: Awaited<ReturnType<typeof prisma.user.findMany>> = await prisma.user.findMany()
 console.log(allUsers)
 
-await prisma.user.create({
-    data: {
-      name: 'Rich',
-      email: 'hello@prisma.com',
-      posts: {
-        create: {
-          title: 'My first post',
-          body: 'Lots of really interesting stuff',
-          slug: 'my-first-post',
-        },
-      },
-    },
-  })
 
-  const allUsersP = await prisma.user.findMany({
-    include: {
-      posts: true,
-    },
-  })
-  console.dir(allUsersP, { depth: null })
+// await prisma.item.create({
+//   data: {
+//     name: 'orange juice',
+//     slug: 'orange-juice',
+//     price: 4.99,
+//     category: {
+//       connect: { id: '68f566ca9839687e54292122' }
+//     },
+//     imageUrl: '/drinks.jpg',
+//     createdBy: {
+//        connect: { id: '68f55730cdad9b4fb1d95884' }
+//     }
+//   }
+// })
 }
 
 main()
