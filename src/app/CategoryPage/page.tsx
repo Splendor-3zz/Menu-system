@@ -24,7 +24,6 @@ const Category = async () => {
                             <h1 className="text-5xl w-70 text-center">{category.title}</h1>
                             
                             <div className="flex justify-around">
-                                {admin && <AddButton />}
                                 {admin && <EditButton />}
                                 {admin && <DeleteButton />}
                             </div>

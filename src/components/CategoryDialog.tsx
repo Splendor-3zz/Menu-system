@@ -1,3 +1,4 @@
+"use client";
 import {
   Dialog,
   DialogContent,
@@ -47,7 +48,7 @@ export function CategoryDialog() {
       <Form {...form}>
         <form>
           <DialogTrigger asChild>
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full cursor-pointer">
               Add Category <Plus />
             </Button>
           </DialogTrigger>

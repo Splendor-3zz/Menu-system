@@ -1,14 +1,14 @@
-"use client";
-
+import { getCategoriesAction } from "../../action/action";
 import { ItemDialog } from "./ItemDialog";
 
 interface IProps {
 
 }
 
-const AddButton = ({}: IProps) => {
+const AddButton = async ({}: IProps) => {
+    const categories = await getCategoriesAction();
     return(
-        <ItemDialog/>
+        <ItemDialog categories={categories}/>
     )
 }
 

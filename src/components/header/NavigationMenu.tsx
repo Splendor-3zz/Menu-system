@@ -1,10 +1,9 @@
-"use client";
-
 import * as React from "react";
 import Link from "next/link";
 
 import {
   NavigationMenu,
+  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
@@ -16,6 +15,7 @@ import { Plus, ShoppingCart } from "lucide-react";
 import { Role } from "@prisma/client";
 import { ItemDialog } from "../ItemDialog";
 import { CategoryDialog } from "../CategoryDialog";
+import AddButton from "../AddButton";
 
 export function NavigationMenuDemo() {
   const user = Role.USER;
@@ -55,10 +55,18 @@ export function NavigationMenuDemo() {
               </Link>
             </NavigationMenuItem>
              <NavigationMenuItem className="hidden md:block z-1">
-                <NavigationMenuLink asChild>
+              <NavigationMenuTrigger>Add</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid w-full ">
+                  <li className="space-y-1">
                   <CategoryDialog />
-                </NavigationMenuLink>
+                  <AddButton />
+                
+                  </li>
+                </ul>
+                </NavigationMenuContent>
         </NavigationMenuItem>
+        
           </NavigationMenuList>
         </NavigationMenu>
       </div>

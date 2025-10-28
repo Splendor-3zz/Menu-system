@@ -21,7 +21,7 @@ const page = async ({ params }: IProps) => {
                     <Link key={item.id} className="border-2 border-b-gray-600 m-5 p-5" href={""}>
                         <div className="">
                             <div className="w-full h-50 content-center contain-content justify-center flex">
-                                <Image src={`${item.imageUrl}`} alt={"food"} width={250} height={250} />
+                                <img src={`${item.imageUrl}`} alt={"food"} width={250} height={250} />
                             </div>
                             <div className="">
                                 <h1 className="text-3xl w-50 h-20">{item.title}</h1>

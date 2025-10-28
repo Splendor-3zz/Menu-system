@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -12,15 +14,16 @@ import {
   FormMessage,
 } from "./ui/form"
 import { Input } from "./ui/input"
-import { createItemsAction } from "../../action/action"
+import { createItemsAction, getCategoriesAction } from "../../action/action"
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/categoryDialog"
+import { Plus } from "lucide-react";
 
 
 
-export function ItemDialog() {
+export function ItemDialog({categories}: {categories: any[]}) {
     
     const [isOpen, setIsOpen] = useState(false);
-
+    
     const onSubmit = async ({title, imageUrl, userId, price, categoryId}:itemFormValues) => {
         await createItemsAction({title, imageUrl, userId, price, categoryId});
         setIsOpen(false);
@@ -40,19 +43,13 @@ const defaultValues: Partial<itemFormValues> = {
     defaultValues,
     mode: "onChange",
   })
-
-  const handleButton = (e: { preventDefault: () => void; stopPropagation: () => void; }) => {
-        e.preventDefault();       // stop the link navigation
-        e.stopPropagation();      // stop click bubbling
-        // your edit logic here...
-      };
      
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <Form {...form}>
-      <form onClick={handleButton}>
+      <form>
         <DialogTrigger asChild>
-          <Button variant="outline" className="my-5 cursor-pointer w-20">Add</Button>
+          <Button variant="outline" className="w-full cursor-pointer">Add Item <Plus/></Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <Form {...form}>
@@ -101,6 +98,26 @@ const defaultValues: Partial<itemFormValues> = {
             </FormItem>
           )}
         />
+        <FormField
+  control={form.control}
+  name="categoryId"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Category</FormLabel>
+      <FormControl>
+        <select {...field} className="border p-2 rounded-md w-full">
+          <option value="" className="bg-black">Select category</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id} className="bg-black">
+              {cat.title}
+            </option>
+          ))}
+        </select>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
         <Button type="submit" className="cursor-pointer">Submit</Button>
       </form>
     </Form>
