@@ -1,10 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import { getItemsAction } from "../../../../action/action";
 import { Button } from "@/components/ui/button";
-import DeleteButton from "@/components/DeleteButton";
-import EditButton from "@/components/EditButton";
 import { Role } from "@prisma/client";
+import DeleteButtonItem from "@/components/DeleteButtonItem";
+import { EditFormItem } from "@/components/EditFormItem";
 
 
 
@@ -14,7 +13,8 @@ interface IProps {
 
 const page = async ({ params }: IProps) => {
     const admin= Role.ADMIN;
-    const items = await getItemsAction(params.id);
+    const { id } = await params;
+    const items = await getItemsAction(id);
     return(
         <div className="flex border-x-amber-900 border-y-amber-900 justify-start mx-10 content-center items-center border-2 border-gray-500">
             {!items.length ? <h1 className="text-3xl m-10">No Items Available</h1> : items.map(item => (
@@ -28,8 +28,8 @@ const page = async ({ params }: IProps) => {
                                 <h1>{item.price}$</h1>
                                 {admin? 
                                 <div className="w-full mt-5 flex justify-between ">
-                                    <EditButton />
-                                    <DeleteButton />
+                                    <EditFormItem item={item}/>
+                                    <DeleteButtonItem item={item}/>
                                 </div> :
                                 <Button className="w-full mt-5">add</Button>}
                                 

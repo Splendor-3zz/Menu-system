@@ -1,6 +1,8 @@
 "use server";
 
+import { ICate, IItem } from "@/interface";
 import { PrismaClient } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 const prisma = new PrismaClient()
 
@@ -17,14 +19,30 @@ export const createCategoriesAction = async ({title, imageUrl,userId}:{title: st
                 connect: { id: userId }
             }
         }
-    })
+    }),
+    revalidatePath("/");
+
 }
-export const updateCategoriesAction = async () => {
-    
+export const updateCategoriesAction = async (cate: ICate) => {
+    await prisma.category.update({
+        data: {
+            title: cate.title,
+            imageUrl: cate.imageUrl
+        },
+        where: {
+            id: cate.id
+        }
+    }),
+    revalidatePath("/");
 }
 
-export const deleteCategoriesAction = async () => {
-    
+export const deleteCategoriesAction = async ({id}: {id: string}) => {
+    await prisma.category.delete({
+        where:{
+            id
+        }
+    }),
+    revalidatePath("/");
 }
 
 export const getItemsAction = async (id: string) => {
@@ -58,14 +76,40 @@ export const createItemsAction = async ({title, price, imageUrl, userId, categor
                 connect: { id: categoryId}
             }
         }
-    })
-    console.log("Creating item on server:", { title, categoryId });
+    }),
+    revalidatePath("/");
+
 }
 
-export const updateItemsAction = async () => {
+export const updateItemsAction = async (item: IItem) => {
+
+     const slug = item.title
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+
+    await prisma.item.update({
+        where: {
+            id: item.id
+        },
+        data: {
+            slug,
+            title: item.title,
+            price: item.price,
+            imageUrl: item.imageUrl,
+        }
+    }),
+    revalidatePath(`/CategoryPage/${item.categoryId}`);
     
 }
 
-export const deleteItemsAction = async () => {
-    
+export const deleteItemsAction = async ({id}: {id: string}) => {
+    await prisma.item.delete({
+        where:{
+            id
+        }
+    }),
+    revalidatePath("/");
 }

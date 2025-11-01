@@ -5,8 +5,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/categoryDialog";
-import { Plus } from "lucide-react";
-import { createCategoriesAction } from "../../action/action";
+import { updateCategoriesAction } from "../../action/action";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,19 +20,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ICate } from "@/interface";
 
-export function CategoryDialog() {
+
+export function EditFormCate({cate}: {cate : ICate}) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const onSubmit = async ({ title, imageUrl, userId }: categoryFormValues) => {
-    await createCategoriesAction({ title, imageUrl, userId });
+  const onSubmit = async (data: categoryFormValues) => {
+    console.log("Submitting update:", data);
+    await updateCategoriesAction({id: cate.id, title: data.title, imageUrl: data.imageUrl });
     setIsOpen(false);
     form.reset();
+    console.log(data)
   };
 
   const defaultValues: Partial<categoryFormValues> = {
-    title: "",
-    imageUrl: "",
+    title: cate.title,
+    imageUrl: cate.imageUrl,
     userId: "68f55730cdad9b4fb1d95884",
   };
 
@@ -45,12 +48,8 @@ export function CategoryDialog() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <Form {...form}>
-        <form>
           <DialogTrigger asChild>
-            <Button variant="outline" className="w-full cursor-pointer">
-              Add Category <Plus />
-            </Button>
+            <Button className="my-5 cursor-pointer bg-blue-400 hover:bg-blue-300 w-20">Edit</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <Form {...form}>
@@ -58,7 +57,7 @@ export function CategoryDialog() {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-8"
               >
-                <DialogTitle>Add Category</DialogTitle>
+                <DialogTitle>Edit Category</DialogTitle>
                 <FormField
                   control={form.control}
                   name="title"
@@ -90,13 +89,11 @@ export function CategoryDialog() {
                   )}
                 />
                 <Button type="submit" className="cursor-pointer">
-                  Submit
+                  Update
                 </Button>
               </form>
             </Form>
           </DialogContent>
-        </form>
-      </Form>
     </Dialog>
   );
 }
