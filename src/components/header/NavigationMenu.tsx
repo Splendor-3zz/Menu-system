@@ -23,7 +23,7 @@ export function NavigationMenuDemo() {
   return (
     <div className="flex justify-between m-10">
       <div>
-        <ModeToggle />
+        
       </div>
       <div>
         <NavigationMenu viewport={false}>

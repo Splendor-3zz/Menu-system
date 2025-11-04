@@ -7,7 +7,6 @@ import { EditFormCate } from "@/components/EditFormCate";
 
 const Category = async () => {
 
-    const admin=Role.ADMIN;
     const categories = await getCategoriesAction();
     return(
         <div>  
@@ -26,8 +25,8 @@ const Category = async () => {
                             </div>
                             
                             <div className="flex justify-around">
-                                {admin && <EditFormCate cate={category} />}
-                                {admin && <DeleteButton cate={category} />}
+                                <EditFormCate cate={category} />
+                                <DeleteButton cate={category} />
                             </div>
                         </div>
                     </div>

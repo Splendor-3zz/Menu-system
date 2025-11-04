@@ -12,7 +12,6 @@ interface IProps {
 }
 
 const page = async ({ params }: IProps) => {
-    const admin= Role.ADMIN;
     const { id } = await params;
     const items = await getItemsAction(id);
     return(
@@ -26,12 +25,11 @@ const page = async ({ params }: IProps) => {
                             <div className="">
                                 <h1 className="text-3xl w-50 h-20">{item.title}</h1>
                                 <h1>{item.price}$</h1>
-                                {admin? 
                                 <div className="w-full mt-5 flex justify-between ">
                                     <EditFormItem item={item}/>
                                     <DeleteButtonItem item={item}/>
-                                </div> :
-                                <Button className="w-full mt-5">add</Button>}
+                                </div>
+                                {/* <Button className="w-full mt-5">add</Button>} */}
                                 
                             </div>
                         </div>
