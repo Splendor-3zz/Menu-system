@@ -14,17 +14,16 @@ import {
   FormMessage,
 } from "./ui/form"
 import { Input } from "./ui/input"
-import { createItemsAction, getCategoriesAction } from "../../action/action"
+import { createItemsAction } from "../../action/action"
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/categoryDialog"
 import { Plus } from "lucide-react";
 
 
-
-export function ItemDialog({categories}: {categories: any[]}) {
+export function ItemDialog({categories, userId}: {categories: any[]; userId: string | null}) {
     
     const [isOpen, setIsOpen] = useState(false);
     
-    const onSubmit = async ({title, imageUrl, userId, price, categoryId}:itemFormValues) => {
+    const onSubmit = async ({title, imageUrl, price, categoryId}:itemFormValues) => {
         await createItemsAction({title, imageUrl, userId, price, categoryId});
         setIsOpen(false);
         form.reset();
@@ -34,8 +33,6 @@ const defaultValues: Partial<itemFormValues> = {
     title: "",
     imageUrl: "",
     price: 0,
-    userId: "68f55730cdad9b4fb1d95884",
-    categoryId: "",
 }
 
     const form = useForm<itemFormValues>({

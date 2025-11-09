@@ -37,7 +37,6 @@ export function EditFormCate({cate}: {cate : ICate}) {
   const defaultValues: Partial<categoryFormValues> = {
     title: cate.title,
     imageUrl: cate.imageUrl,
-    userId: "68f55730cdad9b4fb1d95884",
   };
 
   const form = useForm<categoryFormValues>({

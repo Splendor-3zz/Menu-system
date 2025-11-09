@@ -1,14 +1,12 @@
+import { auth } from "@clerk/nextjs/server";
 import { getCategoriesAction } from "../../action/action";
 import { ItemDialog } from "./ItemDialog";
 
-interface IProps {
 
-}
-
-const AddButton = async ({}: IProps) => {
+const AddButton = async ({userId}: {userId: string | null}) => {
     const categories = await getCategoriesAction();
     return(
-        <ItemDialog categories={categories}/>
+        <ItemDialog categories={categories} userId={userId}/>
     )
 }
 

@@ -22,10 +22,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-export function CategoryDialog() {
+export function CategoryDialog({userId}:{userId: string |null}) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const onSubmit = async ({ title, imageUrl, userId }: categoryFormValues) => {
+  const onSubmit = async ({ title, imageUrl }: categoryFormValues) => {
     await createCategoriesAction({ title, imageUrl, userId });
     setIsOpen(false);
     form.reset();
@@ -34,7 +34,6 @@ export function CategoryDialog() {
   const defaultValues: Partial<categoryFormValues> = {
     title: "",
     imageUrl: "",
-    userId: "68f55730cdad9b4fb1d95884",
   };
 
   const form = useForm<categoryFormValues>({

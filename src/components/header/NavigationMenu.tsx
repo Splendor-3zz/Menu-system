@@ -10,21 +10,22 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { ModeToggle } from "./ModeToggle";
-import { Plus, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { Role } from "@prisma/client";
-import { ItemDialog } from "../ItemDialog";
 import { CategoryDialog } from "../CategoryDialog";
 import AddButton from "../AddButton";
+import { auth } from "@clerk/nextjs/server";
+import { getCurrentUserAction } from "../../../action/action";
 
-export function NavigationMenuDemo() {
+export async function NavigationMenuDemo() {
   const user = Role.USER;
-  
+  const { userId } = await auth();
+
+  const currentUser = await getCurrentUserAction();
+  const isAdmin = currentUser?.role === Role.ADMIN;
+
   return (
-    <div className="flex justify-between m-10">
-      <div>
-        
-      </div>
+    <div className="flex justify-center m-10">
       <div>
         <NavigationMenu viewport={false}>
           <NavigationMenuList>
@@ -32,7 +33,7 @@ export function NavigationMenuDemo() {
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link href={user? "/" : "/admin/"}>Home</Link>
+              <Link href={"/"}>Home</Link>
             </NavigationMenuItem>
             <NavigationMenuItem
               asChild
@@ -46,45 +47,29 @@ export function NavigationMenuDemo() {
             >
               <Link href="">Contact Us</Link>
             </NavigationMenuItem>
-            <NavigationMenuItem
-              asChild
-              className={navigationMenuTriggerStyle()}
-            >
-              <Link href="">
-                <ShoppingCart />
-              </Link>
-            </NavigationMenuItem>
-             <NavigationMenuItem className="hidden md:block z-1">
-              <NavigationMenuTrigger>Add</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid w-full ">
-                  <li className="space-y-1">
-                  <CategoryDialog />
-                  <AddButton />
-                
-                  </li>
-                </ul>
+            {!isAdmin && (
+              <NavigationMenuItem
+                asChild
+                className={navigationMenuTriggerStyle()}
+              >
+                <Link href="">
+                  <ShoppingCart />
+                </Link>
+              </NavigationMenuItem>
+            )}
+            {isAdmin && (
+              <NavigationMenuItem className="hidden md:block z-1">
+                <NavigationMenuTrigger>Add</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-full ">
+                    <li className="space-y-1">
+                      <CategoryDialog userId={userId} />
+                      <AddButton userId={userId} />
+                    </li>
+                  </ul>
                 </NavigationMenuContent>
-        </NavigationMenuItem>
-        
-          </NavigationMenuList>
-        </NavigationMenu>
-      </div>
-      <div>
-        <NavigationMenu viewport={false}>
-          <NavigationMenuList>
-            <NavigationMenuItem
-              asChild
-              className={navigationMenuTriggerStyle()}
-            >
-              <Link href={""}>Sign In</Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem
-              asChild
-              className={`${navigationMenuTriggerStyle()} bg-orange-400 hover:bg-orange-300 focus:bg-orange-300`}
-            >
-              <Link href={""}>Sign Up</Link>
-            </NavigationMenuItem>
+              </NavigationMenuItem>
+            )}
           </NavigationMenuList>
         </NavigationMenu>
       </div>

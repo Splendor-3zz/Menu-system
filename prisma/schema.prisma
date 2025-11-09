@@ -8,7 +8,7 @@ generator client {
 }
 
 model User {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  id    String @id @map("_id")
   email String
   title String?
   role Role @default(USER)
@@ -29,7 +29,7 @@ model Category {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   title  String
   imageUrl String
-  userId String @db.ObjectId @default("68f55730cdad9b4fb1d95884")
+  userId String
   user   User   @relation(fields: [userId], references: [id])
   items  Item[]
   createdAt DateTime @default(now())
@@ -38,12 +38,11 @@ model Category {
 model Item{
     id        String   @id @default(auto()) @map("_id") @db.ObjectId
     title      String
-    slug      String   @unique
     price     Float
     imageUrl String
     available Boolean  @default(true)
     user   User   @relation(fields: [userId], references: [id])
-    userId String @db.ObjectId @default("68f55730cdad9b4fb1d95884")
+    userId String
     category  Category @relation(fields: [categoryId], references: [id])
     categoryId String  @db.ObjectId
     createdAt DateTime @default(now())
