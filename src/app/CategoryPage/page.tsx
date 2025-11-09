@@ -17,7 +17,7 @@ const Category = async () => {
     <div>
       <div className="flex flex-col justify-center mx-10  content-center items-center border-2 border-gray-500 ">
         {!categories.length ? (
-          <h1 className="text-3xl m-10">Noo Items Available</h1>
+          <h1 className="text-3xl m-10">No Items Available</h1>
         ) : (
           categories.map((category) => (
             <div
