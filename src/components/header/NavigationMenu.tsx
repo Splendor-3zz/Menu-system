@@ -15,11 +15,14 @@ import { Role } from "@prisma/client";
 import { CategoryDialog } from "../CategoryDialog";
 import AddButton from "../AddButton";
 import { auth } from "@clerk/nextjs/server";
-import { getCurrentUserAction } from "../../../action/action";
+import { cartItemsAction, getCurrentUserAction } from "../../../action/action";
+import CartLength from "../CartLength";
 
 export async function NavigationMenuDemo() {
   const user = Role.USER;
   const { userId } = await auth();
+
+   
 
   const currentUser = await getCurrentUserAction();
   const isAdmin = currentUser?.role === Role.ADMIN;
@@ -52,8 +55,8 @@ export async function NavigationMenuDemo() {
                 asChild
                 className={navigationMenuTriggerStyle()}
               >
-                <Link href="">
-                  <ShoppingCart />
+                <Link href="/Cart">
+                  <ShoppingCart /><CartLength/>
                 </Link>
               </NavigationMenuItem>
             )}

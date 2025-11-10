@@ -7,6 +7,7 @@ import { auth } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
+
 export const getCurrentUserAction = async () => {
   const { userId } = await auth();
   if (!userId) return null;
@@ -82,7 +83,6 @@ export const createItemsAction = async ({
   userId: string | null;
   categoryId: string;
 }) => {
-  // generate a slug from the name to satisfy the required 'slug' field on ItemCreateInput
 
   await prisma.item.create({
     data: {
@@ -117,4 +117,14 @@ export const deleteItemsAction = async ({ id }: { id: string }) => {
     },
   }),
     revalidatePath("/");
+};
+
+export const cartItemsAction = async ()=> {
+    return await prisma.item.findMany({
+        where: {
+            ordered: true,
+        },
+        select: { id: true, title: true, price: true, imageUrl: true },
+        orderBy: { createdAt: "desc" },
+    })
 };
