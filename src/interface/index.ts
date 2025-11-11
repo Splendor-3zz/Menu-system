@@ -11,3 +11,7 @@ export interface IItem{
     categoryId: string
 
 }
+export interface ICart{
+    id: string
+    quantity: number
+}

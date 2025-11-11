@@ -1,4 +1,5 @@
 import {
+    addToCartAction,
   getCurrentUserAction,
   getItemsAction,
 } from "../../../../action/action";
@@ -6,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Role } from "@prisma/client";
 import DeleteButtonItem from "@/components/DeleteButtonItem";
 import { EditFormItem } from "@/components/EditFormItem";
+import { AddToCartButton } from "@/components/AddToCartButton";
 
 interface IProps {
   params: { id: string };
@@ -45,7 +47,7 @@ const page = async ({ params }: IProps) => {
                     <DeleteButtonItem item={item} />
                   </div>
                 )}
-                {isAdmin || <Button className="w-full mt-5">add</Button>}
+                {isAdmin || <AddToCartButton id={item.id}/>}
               </div>
             </div>
           </div>

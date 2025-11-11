@@ -1,12 +1,11 @@
 "use server";
 
-import { ICate, IItem } from "@/interface";
+import { ICart, ICate, IItem } from "@/interface";
 import { PrismaClient } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
-
 
 export const getCurrentUserAction = async () => {
   const { userId } = await auth();
@@ -66,6 +65,7 @@ export const getItemsAction = async (id: string) => {
   return await prisma.item.findMany({
     where: {
       categoryId: id,
+
     },
   });
 };
@@ -83,7 +83,6 @@ export const createItemsAction = async ({
   userId: string | null;
   categoryId: string;
 }) => {
-
   await prisma.item.create({
     data: {
       title,
@@ -119,12 +118,41 @@ export const deleteItemsAction = async ({ id }: { id: string }) => {
     revalidatePath("/");
 };
 
-export const cartItemsAction = async ()=> {
-    return await prisma.item.findMany({
-        where: {
-            ordered: true,
-        },
-        select: { id: true, title: true, price: true, imageUrl: true },
-        orderBy: { createdAt: "desc" },
-    })
+export const cartItemsAction = async () => {
+  return await prisma.item.findMany({
+    where: {
+      ordered: true,
+    },
+    select: { id: true, title: true, price: true, imageUrl: true, quantity: true },
+    orderBy: { createdAt: "desc" },
+  });
 };
+
+export const addToCartAction = async (id: string) => {
+    const item = await prisma.item.findUnique({
+        where: {
+            id
+        }
+    })
+
+    if (!item) throw new Error("Item not found");
+
+  await prisma.item.update({
+    where: { id },
+    data: { ordered: true, quantity: item.quantity +1  },
+  });
+
+  revalidatePath("/"); // adjust path if your cart page is different
+};
+
+export const updateCartAction = async ({id, quantity}: {id: string,quantity: number}) => {
+    await prisma.item.update({
+        where: {
+            id
+        },
+        data: {
+            quantity
+        }
+    })
+    revalidatePath("/Cart");
+}

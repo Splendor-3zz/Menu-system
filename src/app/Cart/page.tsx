@@ -5,12 +5,13 @@ import Header from "@/components/Header"
 import { Role } from "@prisma/client"
 import { EditFormCate } from "@/components/EditFormCate"
 import DeleteButton from "@/components/DeleteButton"
+import EditCart from "@/components/EditCart"
 
 
 const page = async () => {
       
     const carts = await cartItemsAction()
-    const totalPrice = carts.reduce((sum, cart) => sum + cart.price, 0);
+    const totalPrice = carts.reduce((sum, cart) => sum + cart.price * cart.quantity, 0);
     return(
         <div>
             <Header/>
@@ -32,14 +33,19 @@ const page = async () => {
 
               <div className="p-5 space-x-3 space-y-2 w-75">
                 <div className="flex justify-center text-2xl px-2">
-                 
+                    
                     {cart.title}
                 </div>
-                <div className="flex justify-center px-2">
-                    {cart.price}$
+                <div className="flex justify-between px-2">
+                    <div>
+                        quantity: {cart.quantity}
+                    </div>
+                    <div>
+                        price: {cart.price * cart.quantity}$
+                    </div>
                 </div>
                 <div className="flex justify-around">
-                    <EditFormCate cate={cart} />
+                    <EditCart id={cart.id} />
                     <DeleteButton cate={cart} />
                 </div>
               </div>
@@ -47,7 +53,7 @@ const page = async () => {
             
                 ))}
                 <div className="flex justify-center">
-                    <button className="mt-5 cursor-pointer bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded">
+                    <button className="my-5 cursor-pointer bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded">
                     Buy {totalPrice}$
                 </button>
                 </div>

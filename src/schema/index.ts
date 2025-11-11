@@ -56,6 +56,13 @@ export const categoryFormSchema = z.object({
     price: z.number() .min(1, { message: "Price must be at least 1."})
     });
 
+    export const cartFormSchema = z.object({
+
+    quantity: z .number() .min(1,{message: "quantity can't be 0 or empty"})
+    
+    });
+
 export type categoryFormValues = z.infer<typeof categoryFormSchema>;
 export type itemFormValues = z.infer<typeof itemFormSchema>;
 export type itemEditFormValues = z.infer<typeof itemEditFormSchema>;
+export type cartFormValues = z.infer<typeof cartFormSchema>;
