@@ -6,7 +6,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/categoryDialog";
 import { Plus } from "lucide-react";
-import { createCategoriesAction } from "../../action/action";
+import { createCategoriesAction } from "../../../action/action";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,14 +21,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
-export function CategoryDialog({userId}:{userId: string |null}) {
+export function CategoryDialog({ userId }: { userId: string | null }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const onSubmit = async ({ title, imageUrl }: categoryFormValues) => {
     await createCategoriesAction({ title, imageUrl, userId });
     setIsOpen(false);
     form.reset();
+    toast.success("the CATEGORY has been created successfully.");
   };
 
   const defaultValues: Partial<categoryFormValues> = {

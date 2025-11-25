@@ -12,18 +12,20 @@ import {
 } from "@/components/ui/navigation-menu";
 import { ShoppingCart } from "lucide-react";
 import { Role } from "@prisma/client";
-import { CategoryDialog } from "../CategoryDialog";
-import AddButton from "../AddButton";
+import { CategoryDialog } from "../Category/CategoryDialog";
+import AddButton from "../Items/AddButton";
 import { auth } from "@clerk/nextjs/server";
-import { cartItemsAction, getCurrentUserAction } from "../../../action/action";
-import CartLength from "../CartLength";
+import {
+  getAllOrdersAction,
+  getCurrentUserAction,
+} from "../../../action/action";
+import CartLength from "../Cart/CartLength";
+import OrderCount from "../Order/OrderCount";
 
 export async function NavigationMenuDemo() {
-  const user = Role.USER;
   const { userId } = await auth();
 
-   
-
+  const ordersCount = await getAllOrdersAction();
   const currentUser = await getCurrentUserAction();
   const isAdmin = currentUser?.role === Role.ADMIN;
 
@@ -56,7 +58,7 @@ export async function NavigationMenuDemo() {
                 className={navigationMenuTriggerStyle()}
               >
                 <Link href="/Cart">
-                  <ShoppingCart /><CartLength/>
+                  <ShoppingCart /> <CartLength />
                 </Link>
               </NavigationMenuItem>
             )}
@@ -71,6 +73,16 @@ export async function NavigationMenuDemo() {
                     </li>
                   </ul>
                 </NavigationMenuContent>
+              </NavigationMenuItem>
+            )}
+            {isAdmin && (
+              <NavigationMenuItem
+                asChild
+                className={navigationMenuTriggerStyle()}
+              >
+                <Link href="/Orders">
+                  Orders <OrderCount />{" "}
+                </Link>
               </NavigationMenuItem>
             )}
           </NavigationMenuList>

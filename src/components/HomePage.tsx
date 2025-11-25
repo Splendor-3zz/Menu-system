@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 interface IProps {}
 
@@ -8,7 +9,7 @@ const Home = ({}: IProps) => {
     <div className="flex m-auto justify-center items-center mt-20 container">
       <div>
         <h1 className="font-bold text-4xl ">Delicious & Affordable</h1>
-        <h1 className="font-bold text-4xl text-white bg-indigo-600 w-fit m-3 px-3 py-2 bg-accent-foreground">
+        <h1 className="font-bold text-4xl text-white bg-indigo-600 w-fit m-3 px-3 py-2">
           Meals Near You.
         </h1>
         <h6 className="w-120 my-5">
@@ -16,7 +17,9 @@ const Home = ({}: IProps) => {
           eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </h6>
         <Button className="bg-indigo-500 cursor-pointer text-white px-10 m-3 hover:bg-indigo-300">
-          order now
+        <Link href={"/CategoryPage"}>
+        order now
+        </Link>
         </Button>
       </div>
       <div>

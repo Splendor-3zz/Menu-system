@@ -1,67 +1,58 @@
-import { Heading1 } from "lucide-react"
-import { cartItemsAction, getCategoriesAction, getCurrentUserAction, getItemsAction } from "../../../action/action"
-import Link from "next/link"
-import Header from "@/components/Header"
-import { Role } from "@prisma/client"
-import { EditFormCate } from "@/components/EditFormCate"
-import DeleteButton from "@/components/DeleteButton"
-import EditCart from "@/components/EditCart"
+import EditCart from "@/components/Cart/EditCart";
+import { getCartAction } from "../../../action/action";
+import {
+  incrementCartItemAction,
+  decrementCartItemAction,
+} from "../../../action/action";
+import { Button } from "@/components/ui/button";
+import DeleteFromCart from "@/components/Cart/DeleteFromCart";
+import OrderButton from "@/components/Cart/OrderButton";
 
+const Page = async () => {
+  const cart = await getCartAction();
 
-const page = async () => {
-      
-    const carts = await cartItemsAction()
-    const totalPrice = carts.reduce((sum, cart) => sum + cart.price * cart.quantity, 0);
-    return(
-        <div>
-            <Header/>
-            <div className="flex flex-col justify-center mx-10  content-center items-center border-2 border-gray-500 mb-5">
+  if (!cart || !cart.items.length) {
+    return <h1 className="text-3xl m-10">Your cart is empty.</h1>;
+  }
+
+  const total = cart.items.reduce(
+    (sum, cartItem) => sum + cartItem.item.price * cartItem.quantity,
+    0
+  );
+
+  return (
+    <div className="flex flex-col justify-center mx-10 items-center border-2 border-gray-500 p-5">
+      {cart.items.map(({ id, item, quantity }) => (
+        <div
+          key={id}
+          className="border-b border-gray-600 p-4 w-full flex justify-between items-center"
+        >
+          <div className="flex items-center space-x-4">
+            <img
+              src={item.imageUrl}
+              alt={item.title}
+              width={100}
+              height={100}
+            />
             <div>
-                {!carts.length ? <h1>your cart is empty</h1> : carts.map((cart) => (
-                    <div
-              key={cart.id}
-              className="flex justify-center m-5 contain-content border-2 border-gray-500 h-40  hover:mask-y-from-45"
-            >
-              <div>
-                <img
-                  src={`${cart.imageUrl}`}
-                  alt={"food"}
-                  width={300}
-                  height={300}
-                />
-              </div>
-
-              <div className="p-5 space-x-3 space-y-2 w-75">
-                <div className="flex justify-center text-2xl px-2">
-                    
-                    {cart.title}
-                </div>
-                <div className="flex justify-between px-2">
-                    <div>
-                        quantity: {cart.quantity}
-                    </div>
-                    <div>
-                        price: {cart.price * cart.quantity}$
-                    </div>
-                </div>
-                <div className="flex justify-around">
-                    <EditCart id={cart.id} />
-                    <DeleteButton cate={cart} />
-                </div>
-              </div>
+              <h2 className="text-xl">{item.title}</h2>
+              <p>Price: ${item.price}</p>
+              <p>Total: ${item.price * quantity}</p>
             </div>
-            
-                ))}
-                <div className="flex justify-center">
-                    <button className="my-5 cursor-pointer bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded">
-                    Buy {totalPrice}$
-                </button>
-                </div>
-                
-            </div>
+          </div>
+          <div className="flex space-x-3">
+            <EditCart id={id} quantity={quantity} />
+            <DeleteFromCart id={id} />
+          </div>
         </div>
-        </div>
-    )
-}
+      ))}
 
-export default page
+      <div className="mt-5 text-2xl font-semibold">
+        Total: ${total.toFixed(2)}
+      </div>
+      <OrderButton />
+    </div>
+  );
+};
+
+export default Page;

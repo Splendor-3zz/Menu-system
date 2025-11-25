@@ -1,10 +1,16 @@
 "use client";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/categoryDialog";
+import { updateCategoriesAction } from "../../../action/action";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { itemEditFormSchema, itemEditFormValues } from "../schema";
-import { Button } from "./ui/button";
+import { categoryFormSchema, categoryFormValues } from "@/schema";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,42 +18,32 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { updateItemsAction } from "../../action/action";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/categoryDialog";
-import { IItem } from "@/interface";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { ICate } from "@/interface";
+import { toast } from "sonner";
 
-export function EditFormItem({ item }: { item: IItem }) {
+export function EditFormCate({ cate }: { cate: ICate }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const defaultValues: Partial<itemEditFormValues> = {
-    title: item.title,
-    imageUrl: item.imageUrl,
-    price: item.price,
-  };
-
-  const onSubmit = async (data: itemEditFormValues) => {
-    console.log("Submitting update:", item.id);
-
-    await updateItemsAction({
-      id: item.id,
+  const onSubmit = async (data: categoryFormValues) => {
+    console.log("Submitting update:", data);
+    await updateCategoriesAction({
+      id: cate.id,
       title: data.title,
       imageUrl: data.imageUrl,
-      price: data.price,
-      categoryId: item.categoryId,
     });
     setIsOpen(false);
-    form.reset();
+    toast.success("the Category has been edited successfully.");
   };
 
-  const form = useForm<itemEditFormValues>({
-    resolver: zodResolver(itemEditFormSchema),
+  const defaultValues: Partial<categoryFormValues> = {
+    title: cate.title,
+    imageUrl: cate.imageUrl,
+  };
+
+  const form = useForm<categoryFormValues>({
+    resolver: zodResolver(categoryFormSchema),
     defaultValues,
     mode: "onChange",
   });
@@ -62,7 +58,7 @@ export function EditFormItem({ item }: { item: IItem }) {
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <DialogTitle>Edit Item</DialogTitle>
+            <DialogTitle>Edit Category</DialogTitle>
             <FormField
               control={form.control}
               name="title"
@@ -71,24 +67,6 @@ export function EditFormItem({ item }: { item: IItem }) {
                   <FormLabel>Title</FormLabel>
                   <FormControl>
                     <Input placeholder="your title" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Price</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="1"
-                      value={field.value}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -111,7 +89,6 @@ export function EditFormItem({ item }: { item: IItem }) {
                 </FormItem>
               )}
             />
-
             <Button type="submit" className="cursor-pointer">
               Update
             </Button>

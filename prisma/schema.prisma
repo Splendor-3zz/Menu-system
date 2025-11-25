@@ -14,8 +14,12 @@ model User {
   role Role @default(USER)
   createdAt DateTime @default(now())
   address Address?
+
+  //relations
   category Category[]
+  carts     Cart[]
   item Item[]
+  order Order[]
 }
 
 type Address {
@@ -29,10 +33,13 @@ model Category {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   title  String
   imageUrl String
+  hiden Boolean @default(false)
+  createdAt DateTime @default(now())
+
   userId String
+  //relations
   user   User   @relation(fields: [userId], references: [id])
   items  Item[]
-  createdAt DateTime @default(now())
 }
 
 model Item{
@@ -40,16 +47,65 @@ model Item{
     title      String
     price     Float
     imageUrl String
-    ordered Boolean @default(false)
-    quantity Int @default(0)
     available Boolean  @default(true)
-    user   User   @relation(fields: [userId], references: [id])
-    userId String
-    category  Category @relation(fields: [categoryId], references: [id])
-    categoryId String  @db.ObjectId
+    hiden Boolean @default(false)
+    noOfOrders Int     @default(0)
     createdAt DateTime @default(now())
+
+    categoryId String  @db.ObjectId
+    userId String
+    //relations
+    user      User   @relation(fields: [userId], references: [id])
+    category  Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    cartItems CartItem[]
+    orderItem OrderItem[]
 }
 
+model Cart {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime   @default(now())
+
+  userId    String     
+  // relations
+  user      User       @relation(fields: [userId], references: [id])
+  items     CartItem[]
+}
+
+model CartItem {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  quantity  Int      @default(1)
+  addedAt   DateTime @default(now())
+
+  cartId    String   @db.ObjectId
+  itemId    String   @db.ObjectId
+  // relations
+  cart      Cart     @relation(fields: [cartId], references: [id])
+  item      Item     @relation(fields: [itemId], references: [id])
+}
+
+model Order {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime    @default(now())
+  total     Float
+  status    String       @default("pending")
+
+  userId    String  
+// relations
+  user      User        @relation(fields: [userId], references: [id])
+  items     OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  quantity  Int
+  price     Float
+  
+  orderId   String   @db.ObjectId
+  itemId    String   @db.ObjectId
+  // relations
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+}
 
 
 enum Role {
