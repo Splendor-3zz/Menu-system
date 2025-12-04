@@ -20,19 +20,20 @@ export const getCurrentUserAction = async () => {
   });
 };
 
-
 // CATEGORIES ACTIONS ...
 
-
 export const getAdminCategoriesAction = async () => {
-  return await prisma.category.findMany();
+  return await prisma.category.findMany({
+    orderBy: { order: "asc" },
+  });
 };
 
 export const getCategoriesAction = async () => {
   return await prisma.category.findMany({
     where: {
-      hiden: false
-    }
+      hiden: false,
+    },
+    orderBy: { order: "asc" },
   });
 };
 
@@ -67,6 +68,25 @@ export const updateCategoriesAction = async (cate: ICate) => {
     revalidatePath("/CategoryPage");
 };
 
+export const reorderCategoriesAction = async (orderedIds: string[]) => {
+  // orderedIds = array of category IDs in the new order
+  const updates = orderedIds.map((id, index) =>
+    prisma.category.update({
+      where: { id },
+      data: { order: index },
+    })
+  );
+
+  await Promise.all(updates);
+  revalidatePath("/AdminSortCategories");
+};
+
+export const getSortedCategoriesAction = async () => {
+  return prisma.category.findMany({
+    orderBy: { order: "asc" },
+  });
+};
+
 export const deleteCategoriesAction = async ({ id }: { id: string }) => {
   await prisma.category.delete({
     where: {
@@ -76,57 +96,57 @@ export const deleteCategoriesAction = async ({ id }: { id: string }) => {
     revalidatePath("/");
 };
 
-export const hideCategoryAction = async ({id}: {id: string}) => {
+export const hideCategoryAction = async ({ id }: { id: string }) => {
   const hide = await prisma.category.findUnique({
     where: {
-      id
-    }
-  })
+      id,
+    },
+  });
   if (hide?.hiden === true) {
     await prisma.category.update({
-    where: {
-      id
-    },
-    data: {
-      hiden: false
-    }
-  })
-  }else {
+      where: {
+        id,
+      },
+      data: {
+        hiden: false,
+      },
+    });
+  } else {
     await prisma.category.update({
-    where: {
-      id
-    },
-    data: {
-      hiden: true
-    }
-  })
+      where: {
+        id,
+      },
+      data: {
+        hiden: true,
+      },
+    });
   }
   revalidatePath("/");
-}
+};
 
 export const getCategoryStatuAction = async (id: string) => {
-   const hide = await prisma.category.findUnique({
+  const hide = await prisma.category.findUnique({
     where: {
-      id
-    }
-  })
+      id,
+    },
+  });
   if (hide?.hiden === true) {
     return true;
   } else {
     return false;
   }
-}
-
+};
 
 // ITEMS ACTIONS ...
-
 
 export const getAdminItemsAction = async (id: string) => {
   return await prisma.item.findMany({
     where: {
       categoryId: id,
-
     },
+    orderBy: {
+      order: "asc",
+    }
   });
 };
 
@@ -134,9 +154,45 @@ export const getItemsAction = async (id: string) => {
   return await prisma.item.findMany({
     where: {
       categoryId: id,
-      hiden: false
+      hiden: false,
     },
+    orderBy: {
+      order: "asc",
+    }
   });
+};
+
+export const getSortedItemsAction = async () => {
+  return prisma.item.findMany({
+    orderBy: { order: "asc" },
+  });
+};
+
+export const updateItemOrderAction = async (
+  updates: { id: string; order: number }[],
+  categoryId: string
+) => {
+  for (const item of updates) {
+    await prisma.item.update({
+      where: { id: item.id },
+      data: { order: item.order },
+    });
+  }
+
+  revalidatePath(`/CategoryPage/${categoryId}`);
+};
+
+export const reorderItemsAction = async (orderedIds: string[]) => {
+  // orderedIds = array of category IDs in the new order
+  const updates = orderedIds.map((id, index) =>
+    prisma.item.update({
+      where: { id },
+      data: { order: index },
+    })
+  );
+
+  await Promise.all(updates);
+  revalidatePath("/AdminSortCategories");
 };
 
 export const createItemsAction = async ({
@@ -187,50 +243,48 @@ export const deleteItemsAction = async ({ id }: { id: string }) => {
     revalidatePath("/");
 };
 
-export const hideItemAction = async ({id}: {id: string}) => {
+export const hideItemAction = async ({ id }: { id: string }) => {
   const hide = await prisma.item.findUnique({
     where: {
-      id
-    }
-  })
+      id,
+    },
+  });
   if (hide?.hiden === true) {
     await prisma.item.update({
-    where: {
-      id
-    },
-    data: {
-      hiden: false
-    }
-  })
-  }else {
+      where: {
+        id,
+      },
+      data: {
+        hiden: false,
+      },
+    });
+  } else {
     await prisma.item.update({
-    where: {
-      id
-    },
-    data: {
-      hiden: true
-    }
-  })
+      where: {
+        id,
+      },
+      data: {
+        hiden: true,
+      },
+    });
   }
   revalidatePath("/");
-}
+};
 
 export const getItemStatuAction = async (id: string) => {
-   const hide = await prisma.item.findUnique({
+  const hide = await prisma.item.findUnique({
     where: {
-      id
-    }
-  })
+      id,
+    },
+  });
   if (hide?.hiden === true) {
     return true;
   } else {
     return false;
   }
-}
-
+};
 
 // CART ACTIONS ...
-
 
 export const addToCartAction = async (itemId: string) => {
   const { userId } = await auth();
@@ -277,7 +331,10 @@ export const getCartAction = async () => {
   });
 };
 
-export const updateCartQuantityAction = async (cartItemId: string, quantity: number) => {
+export const updateCartQuantityAction = async (
+  cartItemId: string,
+  quantity: number
+) => {
   await prisma.cartItem.update({
     where: { id: cartItemId },
     data: { quantity },
@@ -295,7 +352,9 @@ export const incrementCartItemAction = async (cartItemId: string) => {
 };
 
 export const decrementCartItemAction = async (cartItemId: string) => {
-  const cartItem = await prisma.cartItem.findUnique({ where: { id: cartItemId } });
+  const cartItem = await prisma.cartItem.findUnique({
+    where: { id: cartItemId },
+  });
   if (!cartItem) return;
 
   // If quantity > 1, decrease; if 1, remove item
@@ -312,31 +371,28 @@ export const decrementCartItemAction = async (cartItemId: string) => {
 };
 
 export const deleteCartAction = async (cartItemId: string) => {
-    await prisma.cartItem.delete({where: {id: cartItemId}});
-    revalidatePath("/Cart")
+  await prisma.cartItem.delete({ where: { id: cartItemId } });
+  revalidatePath("/Cart");
 };
 
-export const  cartItemsAction = async () => {
+export const cartItemsAction = async () => {
+  const { userId } = await auth();
+  if (!userId) return null;
 
-     const { userId } = await auth();
-    if (!userId) return null;
+  const cart = await prisma.cart.findFirst({
+    where: {
+      userId,
+    },
+    include: {
+      items: true,
+    },
+  });
+  if (cart?.items.length === 0) return null;
 
-    const cart = await prisma.cart.findFirst({
-        where: {
-            userId
-        },
-        include: {
-            items: true
-        }
-    })
-    if (cart?.items.length === 0) return null;
-    
-        return cart?.items.length
-}
-
+  return cart?.items.length;
+};
 
 // Orders ...
-
 
 export const placeOrderAction = async () => {
   const { userId } = await auth();
@@ -381,7 +437,6 @@ export const placeOrderAction = async () => {
 };
 
 export const getAllOrdersAction = async () => {
-    
   return await prisma.order.findMany({
     include: {
       items: {
@@ -401,36 +456,37 @@ export const deleteOrderAction = async ({ id }: { id: string }) => {
     revalidatePath("/");
 };
 
-export const orderedItemsQuantityAction = async ({ orderItemId}: { orderItemId: string}) => {
-
+export const orderedItemsQuantityAction = async ({
+  orderItemId,
+}: {
+  orderItemId: string;
+}) => {
   const order = await prisma.order.findUnique({
     where: {
-      id: orderItemId
+      id: orderItemId,
     },
     include: {
-      items: true
-    }
-  })
+      items: true,
+    },
+  });
 
-  order?.items.forEach( async (oi) => {
-    const item = await prisma.item.findUnique(
-        {
-        where: {
-          id: oi.itemId
-        }
-      }
-    )
-      if (!item) return 0;
-      const total = item?.noOfOrders + oi?.quantity
+  order?.items.forEach(async (oi) => {
+    const item = await prisma.item.findUnique({
+      where: {
+        id: oi.itemId,
+      },
+    });
+    if (!item) return 0;
+    const total = item?.noOfOrders + oi?.quantity;
 
-      await prisma.item.updateMany({
-        where: {
-          id: oi.itemId
-        },
-        data: {
-          noOfOrders: total
-        }
-      })})
-      revalidatePath("/");
-
-}
+    await prisma.item.updateMany({
+      where: {
+        id: oi.itemId,
+      },
+      data: {
+        noOfOrders: total,
+      },
+    });
+  });
+  revalidatePath("/");
+};

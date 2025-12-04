@@ -8,6 +8,7 @@ import DeleteButtonItem from "@/components/Items/DeleteButtonItem";
 import { EditFormItem } from "@/components/Items/EditFormItem";
 import { AddToCartButton } from "@/components/Items/AddToCartButton";
 import HideItemButton from "@/components/Items/HideItemButton";
+import ItemReorderList from "@/components/SortingItems";
 
 interface IProps {
   params: { id: string };
@@ -15,12 +16,12 @@ interface IProps {
 
 const page = async ({ params }: IProps) => {
   const { id } = await params;
-  
+
   const currentUser = await getCurrentUserAction();
   const isAdmin = currentUser?.role === Role.ADMIN;
 
-  const userItems = await getItemsAction(id)
-  const adminItems = await getAdminItemsAction(id)
+  const userItems = await getItemsAction(id);
+  const adminItems = await getAdminItemsAction(id);
   const items = isAdmin ? adminItems : userItems;
   return (
     <div className="flex flex-wrap justify-center border-x-amber-900 border-y-amber-900 gap-4 mx-10 border-2 border-gray-500">
@@ -35,15 +36,19 @@ const page = async ({ params }: IProps) => {
               </div>
               <div className="">
                 <h1 className="text-3xl w-50 h-20">{item.title}</h1>
-                <h1>Price: {item.price}$</h1>
+                <h1>Price : {item.price}$</h1>
+                <ItemReorderList items={[]} categoryId={item.categoryId} />
                 {isAdmin && (
                   <div>
-                    <h1>No of Orders: {item.noOfOrders}</h1>
+                    <h1>Orders NO : {item.noOfOrders}</h1>
                     <div className="w-full mt-5 flex justify-between ">
                       <EditFormItem item={item} />
                       <DeleteButtonItem item={item} />
                     </div>
-                    <HideItemButton id={item.id} children={item.hiden === true ? "Unhide": "hide"}/>
+                    <HideItemButton
+                      id={item.id}
+                      children={item.hiden === true ? "Unhide" : "hide"}
+                    />
                   </div>
                 )}
                 {isAdmin || <AddToCartButton id={item.id} />}

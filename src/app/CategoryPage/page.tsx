@@ -64,3 +64,4 @@ const Category = async () => {
 };
 
 export default Category;
+

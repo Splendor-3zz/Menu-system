@@ -35,6 +35,7 @@ model Category {
   imageUrl String
   hiden Boolean @default(false)
   createdAt DateTime @default(now())
+  order Int @default(0)
 
   userId String
   //relations
@@ -51,6 +52,7 @@ model Item{
     hiden Boolean @default(false)
     noOfOrders Int     @default(0)
     createdAt DateTime @default(now())
+    order    Int     @default(0)
 
     categoryId String  @db.ObjectId
     userId String

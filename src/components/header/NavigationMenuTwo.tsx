@@ -22,7 +22,7 @@ import {
 import CartLength from "../Cart/CartLength";
 import OrderCount from "../Order/OrderCount";
 
-export async function NavigationMenuDemo() {
+export async function NavigationMenuDemoTwo() {
   const { userId } = await auth();
 
   const ordersCount = await getAllOrdersAction();
@@ -38,63 +38,14 @@ export async function NavigationMenuDemo() {
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link href={"/"}>Home</Link>
+              <Link href={"/DragAndDrop"}>Category</Link>
             </NavigationMenuItem>
             <NavigationMenuItem
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link href={"/CategoryPage"}>Menu</Link>
+              <Link href={"/DragAndDrop/Items"}>Items</Link>
             </NavigationMenuItem>
-            <NavigationMenuItem
-              asChild
-              className={navigationMenuTriggerStyle()}
-            >
-              <Link href="">Contact Us</Link>
-            </NavigationMenuItem>
-            {!isAdmin && (
-              <NavigationMenuItem
-                asChild
-                className={navigationMenuTriggerStyle()}
-              >
-                <Link href="/Cart">
-                  <ShoppingCart /> <CartLength />
-                </Link>
-              </NavigationMenuItem>
-            )}
-            {isAdmin && (
-              <NavigationMenuItem className="hidden md:block z-1">
-                <NavigationMenuTrigger>Add</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-full ">
-                    <li className="space-y-1">
-                      <CategoryDialog userId={userId} />
-                      <AddButton userId={userId} />
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            )}
-            {isAdmin && (
-              <NavigationMenuItem
-                asChild
-                className={navigationMenuTriggerStyle()}
-              >
-                <Link href="/Orders">
-                  Orders <OrderCount />{" "}
-                </Link>
-              </NavigationMenuItem>
-            )}
-            {isAdmin && (
-              <NavigationMenuItem
-                asChild
-                className={navigationMenuTriggerStyle()}
-              >
-                <Link href="/DragAndDrop">
-                  Drag and Drop
-                </Link>
-              </NavigationMenuItem>
-            )}
           </NavigationMenuList>
         </NavigationMenu>
       </div>
