@@ -23,7 +23,7 @@ const DeleteButton = ({ cate }: { cate: ICate }) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button className="my-5 cursor-pointer bg-red-500 hover:bg-red-400 w-20">
+        <Button className="my-4 sm:my-5 cursor-pointer bg-red-500 hover:bg-red-400 w-15 sm:w-20">
           Delete
         </Button>
       </AlertDialogTrigger>

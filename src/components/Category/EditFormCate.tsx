@@ -9,7 +9,7 @@ import { updateCategoriesAction } from "../../../action/action";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { categoryFormSchema, categoryFormValues } from "@/schema";
+import { categoryFormSchema, categoryFormValues, categoryUpdateSchema, categoryUpdateValues } from "@/schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -26,32 +26,32 @@ import { toast } from "sonner";
 export function EditFormCate({ cate }: { cate: ICate }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const onSubmit = async (data: categoryFormValues) => {
-    console.log("Submitting update:", data);
-    await updateCategoriesAction({
-      id: cate.id,
-      title: data.title,
-      imageUrl: data.imageUrl,
-    });
+  const onSubmit = async (data: categoryUpdateValues) => {
+    const fd = new FormData();
+    fd.append("id", cate.id);
+    fd.append("title", data.title);
+
+    // only append if user selected a new file
+    if (data.image) fd.append("image", data.image);
+
+    await updateCategoriesAction(fd);
     setIsOpen(false);
     toast.success("the Category has been edited successfully.");
   };
 
-  const defaultValues: Partial<categoryFormValues> = {
-    title: cate.title,
-    imageUrl: cate.imageUrl,
-  };
-
-  const form = useForm<categoryFormValues>({
-    resolver: zodResolver(categoryFormSchema),
-    defaultValues,
+  const form = useForm<categoryUpdateValues>({
+    resolver: zodResolver(categoryUpdateSchema),
+    defaultValues: {
+      title: cate.title,
+      image: undefined,
+    },
     mode: "onChange",
   });
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="my-5 cursor-pointer bg-blue-400 hover:bg-blue-300 w-20">
+        <Button className="my-4 sm:my-5 cursor-pointer bg-blue-400 hover:bg-blue-300 w-15 sm:w-20">
           Edit
         </Button>
       </DialogTrigger>
@@ -74,15 +74,21 @@ export function EditFormCate({ cate }: { cate: ICate }) {
             />
             <FormField
               control={form.control}
-              name="imageUrl"
+              name="image"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>image</FormLabel>
                   <FormControl>
                     <Input
-                      type="text"
-                      placeholder="https://example.com/image.jpg"
-                      {...field}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        form.setValue("image", file, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                      }}                      
                     />
                   </FormControl>
                   <FormMessage />

@@ -6,13 +6,13 @@ interface IProps {}
 
 const Home = ({}: IProps) => {
   return (
-    <div className="flex m-auto justify-center items-center mt-20 container">
+    <div className="flex-row justify-center items-center sm:flex mx-5 mt-20">
       <div>
-        <h1 className="font-bold text-4xl ">Delicious & Affordable</h1>
-        <h1 className="font-bold text-4xl text-white bg-indigo-600 w-fit m-3 px-3 py-2">
+        <h1 className="font-bold text-2xl text-center sm:w-fit ">Delicious & Affordable</h1>
+        <h1 className="font-bold text-2xl text-center text-white bg-indigo-600 sm:w-fit m-3 px-3 py-2">
           Meals Near You.
         </h1>
-        <h6 className="w-120 my-5">
+        <h6 className="sm:w-104 my-5">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </h6>
@@ -24,7 +24,7 @@ const Home = ({}: IProps) => {
       </div>
       <div>
         <Image
-          className=""
+          className="w-fit rounded mx-auto"
           src={"/food.avif"}
           alt="food"
           width={500}

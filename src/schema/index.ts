@@ -10,13 +10,25 @@ export const categoryFormSchema = z.object({
       message: "title must not be longer than 30 characters.",
     }),
 
-    imageUrl: 
-    z.string()
-    .url({
-        message: "imageUrl must be a valid URL.",
-    }),
-    
+    image: z
+    .instanceof(File, { message: "Please upload an image file." })
+    .refine((f) => f.size > 0, "File is empty.")
+    .refine(
+      (f) => ["image/jpeg", "image/png", "image/webp"].includes(f.type),
+      "Only JPG/PNG/WebP are allowed."
+    )
+    .refine((f) => f.size <= 2 * 1024 * 1024, "Max size is 2MB."),
     });
+
+    export const categoryUpdateSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  image: z
+    .instanceof(File)
+    .optional()
+    .refine((f) => !f || f.type.startsWith("image/"), "File must be an image")
+    .refine((f) => !f || f.size <= 2 * 1024 * 1024, "Max size is 2MB"),
+});
+
 
     export const itemFormSchema = z.object({
   title: z
@@ -63,6 +75,7 @@ export const categoryFormSchema = z.object({
     });
 
 export type categoryFormValues = z.infer<typeof categoryFormSchema>;
+export type categoryUpdateValues = z.infer<typeof categoryUpdateSchema>;
 export type itemFormValues = z.infer<typeof itemFormSchema>;
 export type itemEditFormValues = z.infer<typeof itemEditFormSchema>;
 export type cartFormValues = z.infer<typeof cartFormSchema>;

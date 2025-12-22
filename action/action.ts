@@ -5,6 +5,8 @@ import { ICate, IItem } from "@/interface";
 import { PrismaClient } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
+import path from "path";
+import fs from "fs/promises";
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 const prisma = globalForPrisma.prisma || new PrismaClient();
@@ -37,34 +39,101 @@ export const getCategoriesAction = async () => {
   });
 };
 
-export const createCategoriesAction = async ({
-  title,
-  imageUrl,
-  userId,
-}: {
-  title: string;
-  imageUrl: string;
-  userId: string | null;
-}) => {
+export const createCategoriesAction = async (formData: FormData) => {
+  const title = formData.get("title");
+  const userId = formData.get("userId");
+  const image = formData.get("image"); // File
+
+  if (typeof title !== "string" || !title.trim()) {
+    throw new Error("title is required");
+  }
+  if (typeof userId !== "string" || !userId) {
+    throw new Error("userId is required");
+  }
+  if (!(image instanceof File)) {
+    throw new Error("image file is required");
+  }
+  if (!image.type.startsWith("image/")) {
+    throw new Error("file must be an image");
+  }
+
+  // Write file to /public/uploads
+  const bytes = await image.arrayBuffer();
+  const buffer = Buffer.from(bytes);
+
+  const ext = image.name.split(".").pop() || "png";
+  const safeName = `${crypto.randomUUID()}.${ext}`;
+  const uploadDir = path.join(process.cwd(), "public", "uploads");
+  await fs.mkdir(uploadDir, { recursive: true });
+
+  const filePath = path.join(uploadDir, safeName);
+  await fs.writeFile(filePath, buffer);
+
+  // This is what you store in DB
+  const imageUrl = `/uploads/${safeName}`;
+
   await prisma.category.create({
     data: {
-      title,
+      title: title.trim(),
       imageUrl,
-      userId: userId as string,
+      userId,
     },
-  }),
+  });
     revalidatePath("/");
 };
-export const updateCategoriesAction = async (cate: ICate) => {
+export const updateCategoriesAction = async (formData: FormData) => {
+
+  const id = formData.get("id");
+  const title = formData.get("title");
+  const image = formData.get("image"); // optional
+
+  if (typeof id !== "string") {
+    throw new Error("id is required");
+  }
+
+  if (typeof title !== "string" || !title.trim()) {
+    throw new Error("title is required");
+  }
+
+  let imageUrl: string | undefined;
+
+  // Only upload if a new image is provided
+  if (image && typeof image === "object" && "arrayBuffer" in image) {
+    const file = image as File;
+
+    if (!file.type.startsWith("image/")) {
+      throw new Error("file must be an image");
+    }
+
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    const ext = file.name.split(".").pop() || "png";
+    const filename = `${crypto.randomUUID()}.${ext}`;
+    const uploadDir = path.join(process.cwd(), "public", "uploads");
+
+    await fs.mkdir(uploadDir, { recursive: true });
+    await fs.writeFile(path.join(uploadDir, filename), buffer);
+
+    imageUrl = `/uploads/${filename}`;
+  }
+
   await prisma.category.update({
+    where: { id },
     data: {
-      title: cate.title,
-      imageUrl: cate.imageUrl,
+      title: title.trim(),
+      ...(imageUrl && { imageUrl }), // conditional update
     },
-    where: {
-      id: cate.id,
-    },
-  }),
+  });
+  // await prisma.category.update({
+  //   data: {
+  //     title: cate.title,
+  //     imageUrl: cate.imageUrl,
+  //   },
+  //   where: {
+  //     id: cate.id,
+  //   },
+  // }),
     revalidatePath("/CategoryPage");
 };
 

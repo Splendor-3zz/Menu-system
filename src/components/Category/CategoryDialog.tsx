@@ -26,21 +26,24 @@ import { toast } from "sonner";
 export function CategoryDialog({ userId }: { userId: string | null }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const onSubmit = async ({ title, imageUrl }: categoryFormValues) => {
-    await createCategoriesAction({ title, imageUrl, userId });
+  const onSubmit = async (values: { title: string; image: File }) => {
+    const fd = new FormData();
+    fd.append("title", values.title);
+    fd.append("image", values.image);
+    if (userId) fd.append("userId", userId);
+
+  await createCategoriesAction(fd);
     setIsOpen(false);
     form.reset();
     toast.success("the CATEGORY has been created successfully.");
   };
 
-  const defaultValues: Partial<categoryFormValues> = {
-    title: "",
-    imageUrl: "",
-  };
-
   const form = useForm<categoryFormValues>({
     resolver: zodResolver(categoryFormSchema),
-    defaultValues,
+    defaultValues: {
+      title: "",
+      image: undefined as any,
+    },
     mode: "onChange",
   });
 
@@ -75,15 +78,21 @@ export function CategoryDialog({ userId }: { userId: string | null }) {
                 />
                 <FormField
                   control={form.control}
-                  name="imageUrl"
-                  render={({ field }) => (
+                  name="image"
+                  render={() => (
                     <FormItem>
                       <FormLabel>image</FormLabel>
                       <FormControl>
                         <Input
-                          type="text"
-                          placeholder="https://example.com/image.jpg"
-                          {...field}
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        form.setValue("image", file as any, {
+                          shouldValidate: true,
+                          shouldDirty: true,
+                        });
+                      }}
                         />
                       </FormControl>
                       <FormMessage />

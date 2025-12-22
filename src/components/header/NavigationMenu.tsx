@@ -34,6 +34,7 @@ export async function NavigationMenuDemo() {
       <div>
         <NavigationMenu viewport={false}>
           <NavigationMenuList>
+          <div className="grid grid-cols-3 sm:flex sm:justify-center">
             <NavigationMenuItem
               asChild
               className={navigationMenuTriggerStyle()}
@@ -50,7 +51,7 @@ export async function NavigationMenuDemo() {
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link href="">Contact Us</Link>
+              <Link href="/About">Contact Us</Link>
             </NavigationMenuItem>
             {!isAdmin && (
               <NavigationMenuItem
@@ -63,7 +64,7 @@ export async function NavigationMenuDemo() {
               </NavigationMenuItem>
             )}
             {isAdmin && (
-              <NavigationMenuItem className="hidden md:block z-1">
+              <NavigationMenuItem className=" w-fit z-1">
                 <NavigationMenuTrigger>Add</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-full ">
@@ -95,6 +96,7 @@ export async function NavigationMenuDemo() {
                 </Link>
               </NavigationMenuItem>
             )}
+            </div>
           </NavigationMenuList>
         </NavigationMenu>
       </div>

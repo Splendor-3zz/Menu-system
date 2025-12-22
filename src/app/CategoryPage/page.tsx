@@ -19,7 +19,7 @@ const Category = async () => {
 
   return (
     <div>
-      <div className="flex flex-wrap justify-around mx-10 border-2 border-gray-500 ">
+      <div className="flex flex-wrap justify-around">
         {!categories.length ? (
           <h1 className="text-3xl m-10">No Items Available</h1>
         ) : (
@@ -40,7 +40,7 @@ const Category = async () => {
                 <div className="flex justify-center  px-2">
                   <Link
                     href={`/CategoryPage/${category.id}`}
-                    className="text-5xl hover:text-destructive cursor-pointer "
+                    className="text-3xl sm:text-5xl hover:text-destructive cursor-pointer "
                   >
                     {category.title}
                   </Link>
