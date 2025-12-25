@@ -8,7 +8,6 @@ import DeleteButtonItem from "@/components/Items/DeleteButtonItem";
 import { EditFormItem } from "@/components/Items/EditFormItem";
 import { AddToCartButton } from "@/components/Items/AddToCartButton";
 import HideItemButton from "@/components/Items/HideItemButton";
-import ItemReorderList from "@/components/SortingItems";
 
 interface IProps {
   params: { id: string };
@@ -24,20 +23,19 @@ const page = async ({ params }: IProps) => {
   const adminItems = await getAdminItemsAction(id);
   const items = isAdmin ? adminItems : userItems;
   return (
-    <div className="flex flex-wrap justify-center border-x-amber-900 border-y-amber-900 gap-4 mx-10 border-2 border-gray-500">
+    <div className="flex flex-wrap justify-center ">
       {!items.length ? (
         <h1 className="text-3xl m-10">No Items Available</h1>
       ) : (
         items.map((item) => (
           <div key={item.id} className="border-2 border-b-gray-600 m-4 p-4">
             <div className="">
-              <div className="flex justify-center w-full h-50 content-center object-cover">
+              <div className="flex justify-center w-55 h-50 content-center object-cover">
                 <img src={`${item.imageUrl}`} alt={"food"} />
               </div>
               <div className="">
                 <h1 className="text-3xl w-50 h-20">{item.title}</h1>
                 <h1>Price : {item.price}$</h1>
-                <ItemReorderList items={[]} categoryId={item.categoryId} />
                 {isAdmin && (
                   <div>
                     <h1>Orders NO : {item.noOfOrders}</h1>

@@ -27,29 +27,33 @@ import { toast } from "sonner";
 export function EditFormItem({ item }: { item: IItem }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const defaultValues: Partial<itemEditFormValues> = {
-    title: item.title,
-    imageUrl: item.imageUrl,
-    price: item.price,
-  };
-
   const onSubmit = async (data: itemEditFormValues) => {
-    console.log("Submitting update:", item.id);
 
-    await updateItemsAction({
-      id: item.id,
-      title: data.title,
-      imageUrl: data.imageUrl,
-      price: data.price,
-      categoryId: item.categoryId,
-    });
+    if (!data.image) {
+    // if image is required, make it required in Zod instead
+    throw new Error("Image is required");
+  }
+
+    const fd = new FormData();
+
+    fd.append("id", item.id);
+    fd.append("title", data.title);
+    fd.append("price", String(data.price));
+    fd.append("image", data.image);
+    fd.append("categoryId", item.categoryId);
+
+    await updateItemsAction(fd);
     setIsOpen(false);
     toast.success("the Item has been edited successfully.");
   };
 
   const form = useForm<itemEditFormValues>({
     resolver: zodResolver(itemEditFormSchema),
-    defaultValues,
+    defaultValues: {
+      title: item.title,
+      image: undefined,
+      price: item.price,
+    },
     mode: "onChange",
   });
 
@@ -97,15 +101,21 @@ export function EditFormItem({ item }: { item: IItem }) {
             />
             <FormField
               control={form.control}
-              name="imageUrl"
+              name="image"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>image</FormLabel>
                   <FormControl>
                     <Input
-                      type="text"
-                      placeholder="https://example.com/image.jpg"
-                      {...field}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        form.setValue("image", file, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                      }}  
                     />
                   </FormControl>
                   <FormMessage />

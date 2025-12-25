@@ -264,22 +264,81 @@ export const reorderItemsAction = async (orderedIds: string[]) => {
   revalidatePath("/AdminSortCategories");
 };
 
-export const createItemsAction = async ({
-  title,
-  price,
-  imageUrl,
-  userId,
-  categoryId,
-}: {
-  title: string;
-  price: number;
-  imageUrl: string;
-  userId: string | null;
-  categoryId: string;
-}) => {
+// export const createItemsAction = async ({
+//   title,
+//   price,
+//   imageUrl,
+//   userId,
+//   categoryId,
+// }: {
+//   title: string;
+//   price: number;
+//   imageUrl: string;
+//   userId: string | null;
+//   categoryId: string;
+// }) => {
+//   await prisma.item.create({
+//     data: {
+//       title,
+//       price,
+//       imageUrl,
+//       userId: userId as string,
+//       categoryId,
+//     },
+//   }),
+//     revalidatePath("/");
+// };
+
+export const createItemsAction = async (formData : FormData) => {
+  const title = formData.get("title");
+  const userId = formData.get("userId");
+  const categoryId = formData.get("categoryId");
+  const image = formData.get("image"); // File
+  const priceRaw = formData.get("price");
+
+if (typeof priceRaw !== "string") {
+  throw new Error("price is required");
+}
+
+const price = Number(priceRaw);
+if (Number.isNaN(price)) {
+  throw new Error("price must be a number");
+}
+
+  if (typeof title !== "string" || !title.trim()) {
+    throw new Error("title is required");
+  }
+  
+  if (typeof categoryId !== "string" || !categoryId) {
+    throw new Error("categoryId is required");
+  }
+  if (typeof userId !== "string" || !userId) {
+    throw new Error("userId is required");
+  }
+  if (!(image instanceof File)) {
+    throw new Error("imageUrl file is required");
+  }
+  if (!image.type.startsWith("image/")) {
+    throw new Error("file must be an image");
+  }
+  // Write file to /public/uploads
+ const bytes = await image.arrayBuffer();
+  const buffer = Buffer.from(bytes);
+
+  const ext = image.name.split(".").pop() || "png";
+  const safeName = `${crypto.randomUUID()}.${ext}`;
+  const uploadDir = path.join(process.cwd(), "public", "uploads");
+  await fs.mkdir(uploadDir, { recursive: true });
+
+  const filePath = path.join(uploadDir, safeName);
+  await fs.writeFile(filePath, buffer);
+
+  // This is what you store in DB
+  const imageUrl = `/uploads/${safeName}`;
+
   await prisma.item.create({
     data: {
-      title,
+      title: title.trim(),
       price,
       imageUrl,
       userId: userId as string,
@@ -289,18 +348,58 @@ export const createItemsAction = async ({
     revalidatePath("/");
 };
 
-export const updateItemsAction = async (item: IItem) => {
+export const updateItemsAction = async (formData:FormData) => {
+
+  const id = formData.get("id");
+  const title = formData.get("title");
+  const priceRaw = formData.get("price");
+  const image = formData.get("image"); // optional
+  const categoryId = formData.get("categoryId");
+
+  if (typeof id !== "string") {
+    throw new Error("id is required");
+  } 
+  if (typeof title !== "string" || !title.trim()) {
+    throw new Error("title is required");
+  }
+  if (typeof priceRaw !== "string") {
+    throw new Error("price is required");
+  }
+  const price = Number(priceRaw);
+  if (Number.isNaN(price)) {
+    throw new Error("price must be a number");
+  } 
+  if (typeof categoryId !== "string" || !categoryId) {
+    throw new Error("categoryId is required");
+  }
+  let imageUrl: string | undefined;
+  // Only upload if a new image is provided
+  if (image && typeof image === "object" && "arrayBuffer" in image) {
+    const file = image as File;
+    if (!file.type.startsWith("image/")) {
+      throw new Error("file must be an image");
+    }
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const ext = file.name.split(".").pop() || "png";
+    const filename = `${crypto.randomUUID()}.${ext}`;
+    const uploadDir = path.join(process.cwd(), "public", "uploads");
+    await fs.mkdir(uploadDir, { recursive: true });
+    await fs.writeFile(path.join(uploadDir, filename), buffer);
+    imageUrl = `/uploads/${filename}`;
+  }
   await prisma.item.update({
     where: {
-      id: item.id,
+      id
     },
     data: {
-      title: item.title,
-      price: item.price,
-      imageUrl: item.imageUrl,
+      title: title.trim(),
+      price,
+      ...(imageUrl && { imageUrl }),
+      categoryId,
     },
   }),
-    revalidatePath(`/CategoryPage/${item.categoryId}`);
+    revalidatePath(`/CategoryPage/${categoryId}`);
 };
 
 export const deleteItemsAction = async ({ id }: { id: string }) => {

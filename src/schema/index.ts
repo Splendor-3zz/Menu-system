@@ -40,11 +40,11 @@ export const categoryFormSchema = z.object({
       message: "title must not be longer than 30 characters.",
     }),
 
-    imageUrl: 
-    z.string()
-    .url({
-        message: "imageUrl must be a valid URL.",
-    }),
+    image: z
+    .instanceof(File)
+    .optional()
+    .refine((f) => !f || f.type.startsWith("image/"), "File must be an image")
+    .refine((f) => !f || f.size <= 2 * 1024 * 1024, "Max size is 2MB"),
     price: z.number() .min(1, { message: "Price must be at least 1."}),
     categoryId: z.string() .min(1, { message: "Please select a category."})
     
@@ -60,11 +60,11 @@ export const categoryFormSchema = z.object({
       message: "title must not be longer than 30 characters.",
     }),
 
-    imageUrl: 
-    z.string()
-    .url({
-        message: "imageUrl must be a valid URL.",
-    }),
+    image: z
+    .instanceof(File)
+    .optional()
+    .refine((f) => !f || f.type.startsWith("image/"), "File must be an image")
+    .refine((f) => !f || f.size <= 2 * 1024 * 1024, "Max size is 2MB"),
     price: z.number() .min(1, { message: "Price must be at least 1."})
     });
 

@@ -33,27 +33,32 @@ export function ItemDialog({
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const onSubmit = async ({
-    title,
-    imageUrl,
-    price,
-    categoryId,
-  }: itemFormValues) => {
-    await createItemsAction({ title, imageUrl, userId, price, categoryId });
+  const onSubmit = async (values: itemFormValues) => {
+
+    if (!values.image) {
+    // if image is required, make it required in Zod instead
+    throw new Error("Image is required");
+  }
+  
+    const fd = new FormData();
+    fd.append("title", values.title);
+    fd.append("price", String(values.price));
+    fd.append("categoryId", values.categoryId);
+    fd.append("image", values.image);
+    if (userId) fd.append("userId", userId);
+    await createItemsAction(fd);
     setIsOpen(false);
     form.reset();
     toast.success("the ITEM has been created successfully.");
   };
 
-  const defaultValues: Partial<itemFormValues> = {
-    title: "",
-    imageUrl: "",
-    price: 0,
-  };
-
   const form = useForm<itemFormValues>({
     resolver: zodResolver(itemFormSchema),
-    defaultValues,
+    defaultValues: {
+      title: "",
+      image: undefined as any,
+      price: 0,
+    },
     mode: "onChange",
   });
 
@@ -107,15 +112,21 @@ export function ItemDialog({
                 />
                 <FormField
                   control={form.control}
-                  name="imageUrl"
+                  name="image"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>image</FormLabel>
                       <FormControl>
                         <Input
-                          type="text"
-                          placeholder="https://example.com/image.jpg"
-                          {...field}
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        form.setValue("image", file as any, {
+                          shouldValidate: true,
+                          shouldDirty: true,
+                        });
+                      }}
                         />
                       </FormControl>
                       <FormMessage />
