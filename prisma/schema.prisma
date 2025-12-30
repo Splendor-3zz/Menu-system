@@ -13,7 +13,6 @@ model User {
   title String?
   role Role @default(USER)
   createdAt DateTime @default(now())
-  address Address?
 
   //relations
   category Category[]
@@ -22,12 +21,6 @@ model User {
   order Order[]
 }
 
-type Address {
-    city String
-    street String
-    building String
-    apartment String
-}
 
 model Category {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
@@ -90,6 +83,8 @@ model Order {
   createdAt DateTime    @default(now())
   total     Float
   status    String       @default("pending")
+  address   String
+  phone     String
 
   userId    String  
 // relations

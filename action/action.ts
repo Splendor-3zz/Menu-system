@@ -562,7 +562,7 @@ export const cartItemsAction = async () => {
 
 // Orders ...
 
-export const placeOrderAction = async () => {
+export const placeOrderAction = async ({address, phone}: {address: string, phone: string}) => {
   const { userId } = await auth();
   if (!userId) throw new Error("Not authenticated");
 
@@ -587,6 +587,8 @@ export const placeOrderAction = async () => {
     data: {
       userId,
       total,
+      address,
+      phone,
       items: {
         create: cart.items.map((ci) => ({
           itemId: ci.itemId,
@@ -606,6 +608,7 @@ export const placeOrderAction = async () => {
 
 export const getAllOrdersAction = async () => {
   return await prisma.order.findMany({
+  
     include: {
       items: {
         include: { item: true },

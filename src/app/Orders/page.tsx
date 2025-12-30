@@ -44,7 +44,7 @@ const Page = async () => {
                 key={order.id}
                 className="border rounded-lg p-4 shadow-md bg-white dark:bg-gray-900"
               >
-                <div className="flex justify-between items-center mb-3">
+                <div className="sm:flex justify-between items-center mb-3">
                   <h2 className="text-lg font-semibold">
                     Order by{" "}
                     {user
@@ -54,6 +54,11 @@ const Page = async () => {
                   <span className="text-sm text-gray-500">
                     {new Date(order.createdAt).toLocaleString()}
                   </span>
+                </div>
+
+                <div className="sm:flex justify-between items-center mb-3">
+                  <h1 className="text-xl">Address: {order.address}</h1>
+                  <h1 className="text-xl">Phone: {order.phone}</h1>
                 </div>
 
                 <div>

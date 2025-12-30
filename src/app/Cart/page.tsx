@@ -1,12 +1,6 @@
 import EditCart from "@/components/Cart/EditCart";
 import { getCartAction } from "../../../action/action";
-import {
-  incrementCartItemAction,
-  decrementCartItemAction,
-} from "../../../action/action";
-import { Button } from "@/components/ui/button";
-import DeleteFromCart from "@/components/Cart/DeleteFromCart";
-import OrderButton from "@/components/Cart/OrderButton";
+import OrderButtonToast from "@/components/Cart/OrderButtonToast";
 
 const Page = async () => {
   const cart = await getCartAction();
@@ -42,7 +36,6 @@ const Page = async () => {
           </div>
           <div className="flex space-x-3">
             <EditCart id={id} quantity={quantity} />
-            <DeleteFromCart id={id} />
           </div>
         </div>
       ))}
@@ -50,7 +43,7 @@ const Page = async () => {
       <div className="mt-5 text-2xl font-semibold">
         Total: ${total.toFixed(2)}
       </div>
-      <OrderButton />
+      <OrderButtonToast />
     </div>
   );
 };

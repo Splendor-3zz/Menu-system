@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/provider/theme-provider";
 import {ClerkProvider} from '@clerk/nextjs'
 import Nav from "@/components/ui/Nav";
 import { Toaster } from "@/components/ui/sonner";
+import { DropdownMenuRadioGroupDemo2 } from "@/components/NavDropDown";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

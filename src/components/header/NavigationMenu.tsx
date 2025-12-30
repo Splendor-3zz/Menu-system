@@ -30,44 +30,44 @@ export async function NavigationMenuDemo() {
   const isAdmin = currentUser?.role === Role.ADMIN;
 
   return (
-    <div className="flex justify-center m-10">
+    <div className="flex justify-center p-0 m-0 sm:m-10">
       <div>
         <NavigationMenu viewport={false}>
           <NavigationMenuList>
-          <div className="grid grid-cols-3 sm:flex sm:justify-center">
+          <div className="sm:flex justify-center">
             <NavigationMenuItem
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link href={"/"}>Home</Link>
+              <Link className="w-full sm:w-fit" href={"/"}>Home</Link>
             </NavigationMenuItem>
             <NavigationMenuItem
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link href={"/CategoryPage"}>Menu</Link>
+              <Link className="w-full sm:w-fit" href={"/CategoryPage"}>Menu</Link>
             </NavigationMenuItem>
             <NavigationMenuItem
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link href="/About">Contact Us</Link>
+              <Link className="w-full sm:w-fit" href="/About">Contact Us</Link>
             </NavigationMenuItem>
             {!isAdmin && (
               <NavigationMenuItem
                 asChild
                 className={navigationMenuTriggerStyle()}
               >
-                <Link href="/Cart">
+                <Link className="w-full sm:w-fit" href="/Cart">
                   <ShoppingCart /> <CartLength />
                 </Link>
               </NavigationMenuItem>
             )}
             {isAdmin && (
-              <NavigationMenuItem className=" w-fit z-1">
-                <NavigationMenuTrigger>Add</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-full ">
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="w-full sm:w-fit">Add</NavigationMenuTrigger>
+                <NavigationMenuContent >
+                  <ul className="grid w-full">
                     <li className="space-y-1">
                       <CategoryDialog userId={userId} />
                       <AddButton userId={userId} />
@@ -81,7 +81,7 @@ export async function NavigationMenuDemo() {
                 asChild
                 className={navigationMenuTriggerStyle()}
               >
-                <Link href="/Orders">
+                <Link className="w-full sm:w-fit" href="/Orders">
                   Orders <OrderCount />{" "}
                 </Link>
               </NavigationMenuItem>
@@ -91,7 +91,7 @@ export async function NavigationMenuDemo() {
                 asChild
                 className={navigationMenuTriggerStyle()}
               >
-                <Link href="/DragAndDrop">
+                <Link className="w-full sm:w-fit" href="/DragAndDrop">
                   Drag and Drop
                 </Link>
               </NavigationMenuItem>
