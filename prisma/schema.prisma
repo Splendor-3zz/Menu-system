@@ -60,10 +60,14 @@ model Cart {
   id        String     @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime   @default(now())
 
-  userId    String     
+  userId    String?
+  guestId   String?
   // relations
-  user      User       @relation(fields: [userId], references: [id])
+  user      User?       @relation(fields: [userId], references: [id])
   items     CartItem[]
+
+  @@index([userId])
+  @@index([guestId])
 }
 
 model CartItem {
@@ -76,6 +80,8 @@ model CartItem {
   // relations
   cart      Cart     @relation(fields: [cartId], references: [id])
   item      Item     @relation(fields: [itemId], references: [id])
+
+  @@unique([cartId, itemId])
 }
 
 model Order {

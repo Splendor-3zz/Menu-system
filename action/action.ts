@@ -2,11 +2,14 @@
 
 import "dotenv/config";
 import { ICate, IItem } from "@/interface";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
 import path from "path";
 import fs from "fs/promises";
+
+import { getOrCreateGuestId, GUEST_COOKIE } from "@/lib/guestCart";
+import { cookies } from "next/headers";
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 const prisma = globalForPrisma.prisma || new PrismaClient();
@@ -456,21 +459,25 @@ export const getItemStatuAction = async (id: string) => {
 
 export const addToCartAction = async (itemId: string) => {
   const { userId } = await auth();
-  if (!userId) throw new Error("Not authenticated");
+  const guestId = userId ? null : await getOrCreateGuestId();
 
-  let cart = await prisma.cart.findFirst({ where: { userId } });
+  let cart = await prisma.cart.findFirst({
+    where: userId ? { userId } : { guestId: guestId! },
+  });
 
   if (!cart) {
-    cart = await prisma.cart.create({ data: { userId } });
+    cart = await prisma.cart.create({
+      data: userId ? { userId } : { guestId: guestId! },
+    });
   }
 
-  const existingItem = await prisma.cartItem.findFirst({
+  const existing = await prisma.cartItem.findFirst({
     where: { cartId: cart.id, itemId },
   });
 
-  if (existingItem) {
+  if (existing) {
     await prisma.cartItem.update({
-      where: { id: existingItem.id },
+      where: { id: existing.id },
       data: { quantity: { increment: 1 } },
     });
   } else {
@@ -479,25 +486,25 @@ export const addToCartAction = async (itemId: string) => {
     });
   }
 
-  revalidatePath("/CartPage");
+  revalidatePath("/Cart");
 };
+
 
 export const getCartAction = async () => {
   const { userId } = await auth();
-  if (!userId) return null;
 
-  // Find the user's cart with all items
-  return await prisma.cart.findFirst({
-    where: { userId },
-    include: {
-      items: {
-        include: {
-          item: true, // this loads the actual product data
-        },
-      },
-    },
+  const store = await cookies();
+  const guestId = store.get(GUEST_COOKIE)?.value;
+
+  if (!userId && !guestId) return null;
+
+  return prisma.cart.findFirst({
+    where: userId ? { userId } : { guestId },
+    include: { items: { include: { item: true } } },
   });
 };
+
+
 
 export const updateCartQuantityAction = async (
   cartItemId: string,
@@ -660,4 +667,67 @@ export const orderedItemsQuantityAction = async ({
     });
   });
   revalidatePath("/");
+};
+
+// ... Marge guest cart to user cart upon sign-in
+
+export const mergeGuestCartIntoUserAction = async () => {
+  const { userId } = await auth();
+  if (!userId) return;
+
+  const store = await cookies();
+  const guestId = store.get(GUEST_COOKIE)?.value;
+  if (!guestId) return;
+
+  // Load guest cart
+  const guestCart = await prisma.cart.findFirst({
+    where: { guestId },
+    include: { items: true },
+  });
+
+  // If no guest cart (or empty), just clear cookie and exit
+  if (!guestCart || guestCart.items.length === 0) {
+    store.set(GUEST_COOKIE, "", { path: "/", maxAge: 0 });
+    return;
+  }
+
+  // Load or create user cart
+  let userCart = await prisma.cart.findFirst({
+    where: { userId },
+  });
+
+  if (!userCart) {
+    userCart = await prisma.cart.create({ data: { userId } });
+  }
+
+  // Merge items: sum quantities for same itemId
+  for (const gi of guestCart.items) {
+    const existing = await prisma.cartItem.findFirst({
+      where: { cartId: userCart.id, itemId: gi.itemId },
+    });
+
+    if (existing) {
+      await prisma.cartItem.update({
+        where: { id: existing.id },
+        data: { quantity: { increment: gi.quantity } },
+      });
+    } else {
+      await prisma.cartItem.create({
+        data: {
+          cartId: userCart.id,
+          itemId: gi.itemId,
+          quantity: gi.quantity,
+        },
+      });
+    }
+  }
+
+  // Delete guest cart + items
+  await prisma.cartItem.deleteMany({ where: { cartId: guestCart.id } });
+  await prisma.cart.delete({ where: { id: guestCart.id } });
+
+  // Remove cookie so this runs only once
+  store.set(GUEST_COOKIE, "", { path: "/", maxAge: 0 });
+
+  revalidatePath("/CartPage");
 };

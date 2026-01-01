@@ -7,8 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import { placeOrderAction } from "../../../action/action";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { DialogContent, DialogTitle, DialogTrigger } from "../ui/categoryDialog";
-import { Plus } from "lucide-react";
+import { useUser, SignInButton } from "@clerk/nextjs";
 
 interface IProps {}
 
@@ -37,6 +36,18 @@ const OrderButtonToast = ({}: IProps) => {
       toast.error(e?.message ?? "Order failed");
     }
   };
+
+  const { isSignedIn } = useUser();
+
+if (!isSignedIn) {
+  return (
+    <div className="flex justify-center mt-6">
+      <SignInButton mode="modal">
+        <Button>Submit</Button>
+      </SignInButton>
+    </div>
+  );
+}
   
   return (
     // <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-6 space-y-3">
@@ -53,7 +64,7 @@ const OrderButtonToast = ({}: IProps) => {
       <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="flex-col  space-y-8"
+                className="flex-col text-center space-y-8"
               >
                 <div className="flex items-baseline gap-8">
                   <FormField

@@ -1,6 +1,9 @@
 import { SignIn } from '@clerk/nextjs'
-import { getUsersAction } from '../../../../action/action';
 
 export default async function Page() {
-  return <SignIn  afterSignInUrl={"/"} />
+  return (
+    <div className='flex justify-center items-center h-screen'>
+      <SignIn  afterSignInUrl={"/"} />
+    </div>
+  )
 }

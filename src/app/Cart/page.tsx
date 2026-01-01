@@ -2,6 +2,8 @@ import EditCart from "@/components/Cart/EditCart";
 import { getCartAction } from "../../../action/action";
 import OrderButtonToast from "@/components/Cart/OrderButtonToast";
 
+export const dynamic = "force-dynamic";
+
 const Page = async () => {
   const cart = await getCartAction();
 
