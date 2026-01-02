@@ -26,7 +26,7 @@ const Category = async () => {
           categories.map((category) => (
             <div
               key={category.id}
-              className="flex justify-center m-5 border-2 border-gray-500"
+              className="flex justify-center m-5 border-2 border-gray-500 shadow-lg rounded"
             >
               <div>
                 <img

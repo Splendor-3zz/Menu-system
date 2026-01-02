@@ -28,7 +28,7 @@ const page = async ({ params }: IProps) => {
         <h1 className="text-3xl m-10">No Items Available</h1>
       ) : (
         items.map((item) => (
-          <div key={item.id} className="border-2 border-b-gray-600 m-4 p-4">
+          <div key={item.id} className="border-2 border-b-gray-600 m-4 p-4 rounded shadow-lg">
             <div className="">
               <div className="flex justify-center w-55 h-50 content-center object-cover">
                 <img src={`${item.imageUrl}`} alt={"food"} />

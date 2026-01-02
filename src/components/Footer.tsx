@@ -4,7 +4,9 @@ interface IProps {
 
 const Footer = ({}: IProps) => {
     return(
-        <h1>Hello Ezz</h1>
+        <div className="bg-indigo-600 text-white w-full text-center">
+            <h1>©2026 ezz copyright</h1>
+        </div>
     )
 }
 
