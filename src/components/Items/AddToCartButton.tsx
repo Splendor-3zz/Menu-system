@@ -12,10 +12,15 @@ export function AddToCartButton({ id }: { id: string }) {
 
     try {
       await addToCartAction(id);
-      toast.success("Added to cart.");
+      toast.success("Added to cart.", {
+        richColors: true,
+        position: "top-center",
+      });
       router.refresh(); // ✅ forces Server Components (cart page) to refetch
     } catch (e: any) {
-      toast.error(e?.message ?? "Failed to add to cart");
+      toast.error(e?.message ?? "Failed to add to cart", {
+        position: "top-center",
+      });
     }
   };
   return (

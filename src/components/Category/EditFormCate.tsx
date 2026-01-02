@@ -36,7 +36,11 @@ export function EditFormCate({ cate }: { cate: ICate }) {
 
     await updateCategoriesAction(fd);
     setIsOpen(false);
-    toast.success("the Category has been edited successfully.");
+    toast.info("the Category has been edited successfully.", {
+        richColors: true,
+        position: "top-center",
+        
+      });
   };
 
   const form = useForm<categoryUpdateValues>({

@@ -28,11 +28,10 @@ export function EditFormItem({ item }: { item: IItem }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const onSubmit = async (data: itemEditFormValues) => {
-
     if (!data.image) {
-    // if image is required, make it required in Zod instead
-    throw new Error("Image is required");
-  }
+      // if image is required, make it required in Zod instead
+      throw new Error("Image is required");
+    }
 
     const fd = new FormData();
 
@@ -44,7 +43,10 @@ export function EditFormItem({ item }: { item: IItem }) {
 
     await updateItemsAction(fd);
     setIsOpen(false);
-    toast.success("the Item has been edited successfully.");
+    toast.info("the Item has been edited successfully.", {
+      richColors: true,
+      position: "top-center",
+    });
   };
 
   const form = useForm<itemEditFormValues>({
@@ -115,7 +117,7 @@ export function EditFormItem({ item }: { item: IItem }) {
                           shouldDirty: true,
                           shouldValidate: true,
                         });
-                      }}  
+                      }}
                     />
                   </FormControl>
                   <FormMessage />

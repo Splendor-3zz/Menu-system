@@ -32,10 +32,13 @@ export function CategoryDialog({ userId }: { userId: string | null }) {
     fd.append("image", values.image);
     if (userId) fd.append("userId", userId);
 
-  await createCategoriesAction(fd);
+    await createCategoriesAction(fd);
     setIsOpen(false);
     form.reset();
-    toast.success("the CATEGORY has been created successfully.");
+    toast.success("the CATEGORY has been created successfully.", {
+      richColors: true,
+      position: "top-center",
+    });
   };
 
   const form = useForm<categoryFormValues>({
@@ -87,12 +90,12 @@ export function CategoryDialog({ userId }: { userId: string | null }) {
                           type="file"
                           accept="image/*"
                           onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        form.setValue("image", file as any, {
-                          shouldValidate: true,
-                          shouldDirty: true,
-                        });
-                      }}
+                            const file = e.target.files?.[0];
+                            form.setValue("image", file as any, {
+                              shouldValidate: true,
+                              shouldDirty: true,
+                            });
+                          }}
                         />
                       </FormControl>
                       <FormMessage />

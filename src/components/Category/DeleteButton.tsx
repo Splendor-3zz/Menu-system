@@ -41,7 +41,10 @@ const DeleteButton = ({ cate }: { cate: ICate }) => {
           <AlertDialogAction
             onClick={async () => {
               await deleteCategoriesAction({ id: cate.id });
-              toast.success("the Category has been deleted.");
+              toast.error("the Category has been deleted.", {
+                richColors: true,
+                position: "top-center",
+              });
             }}
           >
             Continue

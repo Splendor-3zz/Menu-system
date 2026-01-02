@@ -5,23 +5,33 @@ import { Button } from "../ui/button";
 import { toast } from "sonner";
 
 interface IProps {
-    id: string;
-    children: React.ReactNode;
+  id: string;
+  children: React.ReactNode;
 }
 
-const HideItemButton = ({id, children}: IProps) => {
-    return(
-        <Button
+const HideItemButton = ({ id, children }: IProps) => {
+  return (
+    <Button
       className="w-full cursor-pointer bg-amber-300 hover:bg-amber-200"
       onClick={async () => {
-        await hideItemAction({id});
+        await hideItemAction({ id });
         const item = await getItemStatuAction(id);
-        {item === true ? toast.success("the item has been hedden successfully."): toast.success("the item is visible now.")}
+        {
+          item === true
+            ? toast.info("the item has been hedden successfully.", {
+                richColors: true,
+                position: "top-center",
+              })
+            : toast.info("the item is visible now.", {
+                richColors: true,
+                position: "top-center",
+              });
+        }
       }}
     >
-        {children}
+      {children}
     </Button>
-    )
-}
+  );
+};
 
-export default HideItemButton
+export default HideItemButton;

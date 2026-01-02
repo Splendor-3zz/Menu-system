@@ -34,12 +34,11 @@ export function ItemDialog({
   const [isOpen, setIsOpen] = useState(false);
 
   const onSubmit = async (values: itemFormValues) => {
-
     if (!values.image) {
-    // if image is required, make it required in Zod instead
-    throw new Error("Image is required");
-  }
-  
+      // if image is required, make it required in Zod instead
+      throw new Error("Image is required");
+    }
+
     const fd = new FormData();
     fd.append("title", values.title);
     fd.append("price", String(values.price));
@@ -49,7 +48,10 @@ export function ItemDialog({
     await createItemsAction(fd);
     setIsOpen(false);
     form.reset();
-    toast.success("the ITEM has been created successfully.");
+    toast.success("the ITEM has been created successfully.", {
+      richColors: true,
+      position: "top-center",
+    });
   };
 
   const form = useForm<itemFormValues>({
@@ -121,12 +123,12 @@ export function ItemDialog({
                           type="file"
                           accept="image/*"
                           onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        form.setValue("image", file as any, {
-                          shouldValidate: true,
-                          shouldDirty: true,
-                        });
-                      }}
+                            const file = e.target.files?.[0];
+                            form.setValue("image", file as any, {
+                              shouldValidate: true,
+                              shouldDirty: true,
+                            });
+                          }}
                         />
                       </FormControl>
                       <FormMessage />

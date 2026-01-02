@@ -40,7 +40,10 @@ const DeleteOrder = ({ id }: IProps) => {
           <AlertDialogAction
             onClick={async () => {
               await deleteOrderAction({ id });
-              toast.success("the Order has been deleted.");
+              toast.error("the Order has been deleted.", {
+                richColors: true,
+                position: "top-center",
+              });
             }}
           >
             Continue

@@ -12,17 +12,20 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "../ui/button";
-import { deleteOrderAction, orderedItemsQuantityAction } from "../../../action/action";
+import {
+  deleteOrderAction,
+  orderedItemsQuantityAction,
+} from "../../../action/action";
 import { toast } from "sonner";
 
 interface IProps {
-    id: string;
-    orderItemId: string;
-}   
+  id: string;
+  orderItemId: string;
+}
 
-const DoneButton = ({id, orderItemId}: IProps) => {
-    return(
-        <AlertDialog>
+const DoneButton = ({ id, orderItemId }: IProps) => {
+  return (
+    <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button className="cursor-pointer bg-green-600 hover:bg-green-500 w-20">
           Done
@@ -31,17 +34,18 @@ const DoneButton = ({id, orderItemId}: IProps) => {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            The order is done.
-          </AlertDialogDescription>
+          <AlertDialogDescription>The order is done.</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
-                await orderedItemsQuantityAction({ orderItemId});
-                await deleteOrderAction({ id });
-                toast.success("the Order is done.");
+              await orderedItemsQuantityAction({ orderItemId });
+              await deleteOrderAction({ id });
+              toast.success("the Order is done.", {
+                richColors: true,
+                position: "top-center",
+              });
             }}
           >
             Continue
@@ -49,7 +53,7 @@ const DoneButton = ({id, orderItemId}: IProps) => {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-    )
-}
+  );
+};
 
-export default DoneButton
+export default DoneButton;

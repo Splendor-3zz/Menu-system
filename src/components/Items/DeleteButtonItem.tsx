@@ -37,7 +37,10 @@ const DeleteButtonItem = ({ item }: { item: IItem }) => {
           <AlertDialogAction
             onClick={async () => {
               await deleteItemsAction({ id: item.id });
-              toast.success("the Item has been deleted.");
+              toast.error("the Item has been deleted.", {
+                richColors: true,
+                position: "top-center",
+              });
             }}
           >
             Continue
