@@ -28,17 +28,15 @@ export function EditFormItem({ item }: { item: IItem }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const onSubmit = async (data: itemEditFormValues) => {
-    if (!data.image) {
-      // if image is required, make it required in Zod instead
-      throw new Error("Image is required");
-    }
+    
 
     const fd = new FormData();
 
     fd.append("id", item.id);
     fd.append("title", data.title);
     fd.append("price", String(data.price));
-    fd.append("image", data.image);
+    // only append if user selected a new file
+    if (data.image) fd.append("image", data.image);
     fd.append("categoryId", item.categoryId);
 
     await updateItemsAction(fd);
