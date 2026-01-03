@@ -25,7 +25,7 @@ export function AddToCartButton({ id }: { id: string }) {
   };
   return (
     <Button
-      className="w-full mt-5 cursor-pointer"
+      className="w-full mt-5 cursor-pointer bg-indigo-500 text-white hover:bg-indigo-400"
       onClick={ onAdd}
     >
       Add to Cart
