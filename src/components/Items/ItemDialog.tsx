@@ -23,6 +23,7 @@ import {
 } from "../ui/categoryDialog";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
 
 export function ItemDialog({
   categories,
@@ -142,23 +143,19 @@ export function ItemDialog({
                     <FormItem>
                       <FormLabel>Category</FormLabel>
                       <FormControl>
-                        <select
-                          {...field}
-                          className="border p-2 rounded-md w-full"
-                        >
-                          <option value="" className="bg-black">
-                            Select category
-                          </option>
-                          {categories.map((cat) => (
-                            <option
-                              key={cat.id}
-                              value={cat.id}
-                              className="bg-black"
-                            >
-                              {cat.title}
-                            </option>
-                          ))}
-                        </select>
+                        <Select {...field}>
+                          <SelectTrigger className="border p-2 rounded-md w-full">
+                            <SelectValue placeholder="Select a Category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>Categories</SelectLabel>
+                              {categories.map((cat) => (
+                              <SelectItem key={cat.id} value={cat.id}>{cat.title}</SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
