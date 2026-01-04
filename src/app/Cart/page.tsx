@@ -1,6 +1,12 @@
 import EditCart from "@/components/Cart/EditCart";
 import { getCartAction } from "../../../action/action";
 import OrderButtonToast from "@/components/Cart/OrderButtonToast";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Cart",
+  description: "place your order",
+};
 
 export const dynamic = "force-dynamic";
 

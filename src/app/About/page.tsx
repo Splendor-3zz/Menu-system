@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Contact Ezz Menu support by phone, email, or WhatsApp.",
+};
+
 const Page = () => {
   return (
     <section className="flex justify-center px-4 py-20">

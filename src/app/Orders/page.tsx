@@ -6,6 +6,11 @@ import { Role } from "@prisma/client";
 import { clerkClient } from "@clerk/nextjs/server";
 import DeleteOrder from "@/components/Order/DeleteOrder";
 import DoneButton from "@/components/Order/DoneButton";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Orders",
+};
 
 const Page = async () => {
   const currentUser = await getCurrentUserAction();

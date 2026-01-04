@@ -45,7 +45,7 @@ export async function NavigationMenuDemo() {
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link className="w-full sm:w-fit" href={"/CategoryPage"}>Menu</Link>
+              <Link className="w-full sm:w-fit" href={"/Categories"}>Menu</Link>
             </NavigationMenuItem>
             <NavigationMenuItem
               asChild
@@ -66,7 +66,7 @@ export async function NavigationMenuDemo() {
             {isAdmin && (
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="w-full sm:w-fit">Add</NavigationMenuTrigger>
-                <NavigationMenuContent >
+                <NavigationMenuContent className="z-10" >
                   <ul className="grid w-full">
                     <li className="space-y-1">
                       <CategoryDialog userId={userId} />

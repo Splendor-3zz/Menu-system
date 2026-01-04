@@ -32,7 +32,7 @@ export async function NavigationMenuDemoTwo() {
   return (
     <div className="flex justify-center m-10">
       <div>
-        <NavigationMenu viewport={false}>
+        <NavigationMenu  viewport={false}>
           <NavigationMenuList>
             <NavigationMenuItem
               asChild

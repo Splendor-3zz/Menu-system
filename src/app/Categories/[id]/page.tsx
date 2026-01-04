@@ -8,6 +8,12 @@ import DeleteButtonItem from "@/components/Items/DeleteButtonItem";
 import { EditFormItem } from "@/components/Items/EditFormItem";
 import { AddToCartButton } from "@/components/Items/AddToCartButton";
 import HideItemButton from "@/components/Items/HideItemButton";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Items",
+  description: "Pick the items that you want",
+};
 
 interface IProps {
   params: { id: string };

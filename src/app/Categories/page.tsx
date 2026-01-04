@@ -8,6 +8,12 @@ import DeleteButton from "@/components/Category/DeleteButton";
 import { EditFormCate } from "@/components/Category/EditFormCate";
 import { Role } from "@prisma/client";
 import HideCategoryButton from "@/components/Category/HideCategoryButton";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Category",
+  description: "Choose a category",
+};
 
 const Category = async () => {
   const currentUser = await getCurrentUserAction();
@@ -18,7 +24,7 @@ const Category = async () => {
   const categories = isAdmin ? adminCategories : userCategories;
 
   return (
-    <div>
+    <div className="mt-15">
       <div className="flex flex-wrap justify-around">
         {!categories.length ? (
           <h1 className="text-3xl m-10">No Items Available</h1>
@@ -39,7 +45,7 @@ const Category = async () => {
               <div className={!isAdmin? "content-center mb-5 w-60" : "w-60"}>
                 <div className="flex justify-center  px-2">
                   <Link
-                    href={`/CategoryPage/${category.id}`}
+                    href={`/Categories/${category.id}`}
                     className="text-3xl sm:text-5xl hover:text-destructive cursor-pointer "
                   >
                     {category.title}
