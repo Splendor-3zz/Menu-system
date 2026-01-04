@@ -1,8 +1,6 @@
 import { NavigationMenuDemo } from "./NavigationMenu";
 
-interface IProps {}
-
-const Header = ({}: IProps) => {
+const Header = () => {
   return (
     <div>
       <NavigationMenuDemo />

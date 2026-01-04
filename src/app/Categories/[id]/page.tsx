@@ -34,10 +34,13 @@ const page = async ({ params }: IProps) => {
         <h1 className="text-3xl m-10">No Items Available</h1>
       ) : (
         items.map((item) => (
-          <div key={item.id} className="border-2 border-b-gray-600 m-4 p-4 rounded shadow-lg">
+          <div
+            key={item.id}
+            className="border-2 border-b-gray-600 m-4 p-4 rounded shadow-lg"
+          >
             <div className="">
               <div className="flex justify-center w-55 h-50 content-center object-cover">
-                <img src={`${item.imageUrl}`} alt={"food"} />
+                <img src={item.imageUrl} alt={"food"} />
               </div>
               <div className="">
                 <h1 className="text-3xl w-50 h-20">{item.title}</h1>
@@ -49,10 +52,9 @@ const page = async ({ params }: IProps) => {
                       <EditFormItem item={item} />
                       <DeleteButtonItem item={item} />
                     </div>
-                    <HideItemButton
-                      id={item.id}
-                      children={item.hiden === true ? "Unhide" : "hide"}
-                    />
+                    <HideItemButton id={item.id}>
+                      {item.hiden === true ? "Unhide" : "hide"}
+                    </HideItemButton>
                   </div>
                 )}
                 {isAdmin || <AddToCartButton id={item.id} />}

@@ -1,9 +1,8 @@
 import { getAdminCategoriesAction } from "../../../../action/action";
 import { DropdownMenuRadioGroupDemo } from "@/components/DragAndDrop/DropDown";
 
-interface IProps {}
 
-const page = async ({}: IProps) => {
+const page = async () => {
   const categories = await getAdminCategoriesAction();
 
   return (

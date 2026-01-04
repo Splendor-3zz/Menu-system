@@ -1,8 +1,5 @@
-interface IProps {
 
-}
-
-const Footer = ({}: IProps) => {
+const Footer = () => {
     return(
         <div className="flex justify-around items-center bg-indigo-600 text-white w-full text-center">
             <img className="w-10 h-10" src="/ez.png" alt="" />

@@ -37,12 +37,12 @@ const Category = async () => {
               <div>
                 <img
                   className=" object-cover h-42 w-65"
-                  src={`${category.imageUrl}`}
+                  src={category.imageUrl}
                   alt={"food"}
                 />
               </div>
 
-              <div className={!isAdmin? "content-center mb-5 w-60" : "w-60"}>
+              <div className={!isAdmin ? "content-center mb-5 w-60" : "w-60"}>
                 <div className="flex justify-center  px-2">
                   <Link
                     href={`/Categories/${category.id}`}
@@ -57,7 +57,9 @@ const Category = async () => {
                       <EditFormCate cate={category} />
                       <DeleteButton cate={category} />
                     </div>
-                     <HideCategoryButton id={category.id} children={category.hiden === true ? "Unhide": "hide"}/>
+                    <HideCategoryButton id={category.id}>
+                      {category.hiden === true ? "Unhide" : "hide"}
+                    </HideCategoryButton>
                   </div>
                 )}
               </div>
@@ -70,4 +72,3 @@ const Category = async () => {
 };
 
 export default Category;
-

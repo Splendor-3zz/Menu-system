@@ -1,10 +1,8 @@
 import Image from "next/image";
-import { Button } from "./ui/button";
 import Link from "next/link";
 
-interface IProps {}
 
-const Home = ({}: IProps) => {
+const Home = () => {
   return (
     <div className="flex-row justify-center items-center sm:flex mx-5 mt-20">
       <div>

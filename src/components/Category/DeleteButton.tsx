@@ -11,10 +11,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ICate, IItem } from "@/interface";
+import { ICate } from "@/interface";
 import {
   deleteCategoriesAction,
-  deleteItemsAction,
 } from "../../../action/action";
 import { Button } from "../ui/button";
 import { toast } from "sonner";

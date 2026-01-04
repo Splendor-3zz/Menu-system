@@ -16,8 +16,6 @@ import {
 } from "../ui/form";
 import { useUser, SignInButton } from "@clerk/nextjs";
 
-interface IProps {}
-
 const schema = z.object({
   address: z.string().min(5, "Enter your address"),
   phone: z
@@ -28,7 +26,7 @@ const schema = z.object({
 
 type Values = z.infer<typeof schema>;
 
-const OrderButtonToast = ({}: IProps) => {
+const OrderButtonToast = () => {
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: { address: "", phone: "" },

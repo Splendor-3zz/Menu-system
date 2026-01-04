@@ -9,7 +9,7 @@ import { updateCategoriesAction } from "../../../action/action";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { categoryFormSchema, categoryFormValues, categoryUpdateSchema, categoryUpdateValues } from "@/schema";
+import { categoryUpdateSchema, categoryUpdateValues } from "@/schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
