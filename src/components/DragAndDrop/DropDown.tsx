@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useEffect, useState } from "react";
-import { getAdminItemsAction } from "../../action/action";
+import { getAdminItemsAction } from "../../../action/action";
 import ItemReorderList from "./SortingItems";
 
 interface IProps {
@@ -23,9 +23,11 @@ interface IProps {
 export function DropdownMenuRadioGroupDemo({ categories }: IProps) {
   const [selected, setSelected] = React.useState(categories[0]?.id);
   const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!selected) return;
+    setLoading(true);
+    setItems([]);
 
     const fetchItems = async () => {
       const result = await getAdminItemsAction(selected);
@@ -33,6 +35,7 @@ export function DropdownMenuRadioGroupDemo({ categories }: IProps) {
     };
 
     fetchItems();
+    setLoading(false);
   }, [selected]);
 
   return (
@@ -53,14 +56,17 @@ export function DropdownMenuRadioGroupDemo({ categories }: IProps) {
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-      <div className="mt-5">
-        {items.length ? (
+      <div className="mt-5 mb-10">
+        {loading ? (
+          <h1 className="text-xl m-10">Loading items…</h1>
+        ) : items.length ? (
           <div>
-            <h1 className="text-2xl text-center">Sort Items</h1>
+            <h1 className="text-2xl text-center ">Sort Items</h1>
+            {/* IMPORTANT: pass the right prop name */}
             <ItemReorderList categories={items} />
           </div>
         ) : (
-          <h1 className="text-3xl m-10">There is no Items yet ...</h1>
+          <h1 className="text-3xl m-10">There are no items yet…</h1>
         )}
       </div>
     </div>

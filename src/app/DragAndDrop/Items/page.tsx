@@ -1,7 +1,5 @@
-import {
-  getAdminCategoriesAction,
-} from "../../../../action/action";
-import { DropdownMenuRadioGroupDemo } from "@/components/DropDown";
+import { getAdminCategoriesAction } from "../../../../action/action";
+import { DropdownMenuRadioGroupDemo } from "@/components/DragAndDrop/DropDown";
 
 interface IProps {}
 

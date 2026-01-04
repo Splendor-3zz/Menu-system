@@ -30,7 +30,7 @@ export async function NavigationMenuDemo() {
   const isAdmin = currentUser?.role === Role.ADMIN;
 
   return (
-    <div className="flex justify-center p-0 m-0 sm:m-10">
+    <div className="flex justify-center p-0 m-0">
       <div>
         <NavigationMenu viewport={false}>
           <NavigationMenuList>

@@ -1,5 +1,4 @@
-import Header from "@/components/Header";
-import { DropdownMenuRadioGroupDemo2 } from "@/components/NavDropDown";
+import { NavigationMenuDemoTwo } from "@/components/Headers/NavigationMenuTwo";
 
 interface IProps {
   children: React.ReactNode;
@@ -8,14 +7,7 @@ interface IProps {
 const layout = ({ children }: IProps) => {
   return (
     <div>
-      <div>
-        <div className="sm:hidden flex justify-center">
-          <DropdownMenuRadioGroupDemo2 />
-        </div>
-        <div className="hidden sm:block">
-          <Header />
-        </div>
-      </div>
+      <NavigationMenuDemoTwo />
       {children}
     </div>
   );

@@ -1,4 +1,4 @@
-import { NavigationMenuDemo } from "./header/NavigationMenu";
+import { NavigationMenuDemo } from "./NavigationMenu";
 
 interface IProps {}
 

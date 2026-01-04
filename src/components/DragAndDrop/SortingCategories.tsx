@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { reorderCategoriesAction } from "../../action/action";
+import { reorderCategoriesAction } from "../../../action/action";
 
 interface Category {
   id: string;

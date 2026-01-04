@@ -61,6 +61,7 @@ export function ItemDialog({
       title: "",
       image: undefined as any,
       price: 0,
+      categoryId: "",
     },
     mode: "onChange",
   });
@@ -143,7 +144,7 @@ export function ItemDialog({
                     <FormItem>
                       <FormLabel>Category</FormLabel>
                       <FormControl>
-                        <Select {...field}>
+                        <Select onValueChange={field.onChange} value={field.value}>
                           <SelectTrigger className="border p-2 rounded-md w-full">
                             <SelectValue placeholder="Select a Category" />
                           </SelectTrigger>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { reorderItemsAction } from "../../action/action";
+import { reorderItemsAction } from "../../../action/action";
 
 interface IProps {
   categories: { id: string; title: string }[];
