@@ -6,7 +6,6 @@ import {
 } from "../../../action/action";
 import DeleteButton from "@/components/Category/DeleteButton";
 import { EditFormCate } from "@/components/Category/EditFormCate";
-import { Role } from "@prisma/client";
 import HideCategoryButton from "@/components/Category/HideCategoryButton";
 import type { Metadata } from "next";
 
@@ -17,7 +16,7 @@ export const metadata: Metadata = {
 
 const Category = async () => {
   const currentUser = await getCurrentUserAction();
-  const isAdmin = currentUser?.role === Role.ADMIN;
+  const isAdmin = currentUser?.role === "ADMIN";
 
   const adminCategories = await getAdminCategoriesAction();
   const userCategories = await getCategoriesAction();
