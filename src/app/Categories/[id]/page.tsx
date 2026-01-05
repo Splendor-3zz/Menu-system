@@ -3,7 +3,6 @@ import {
   getCurrentUserAction,
   getItemsAction,
 } from "../../../../action/action";
-import { Role } from "@prisma/client";
 import DeleteButtonItem from "@/components/Items/DeleteButtonItem";
 import { EditFormItem } from "@/components/Items/EditFormItem";
 import { AddToCartButton } from "@/components/Items/AddToCartButton";
@@ -23,7 +22,7 @@ const page = async ({ params }: IProps) => {
   const { id } = await params;
 
   const currentUser = await getCurrentUserAction();
-  const isAdmin = currentUser?.role === Role.ADMIN;
+  const isAdmin = currentUser?.role === "ADMIN";
 
   const userItems = await getItemsAction(id);
   const adminItems = await getAdminItemsAction(id);
