@@ -578,7 +578,9 @@ export const cartItemsAction = async () => {
       include: { items: true },
     });
     if (!cart) return null;
-    return cart.items.reduce<number>((sum, ci) => sum + ci.quantity, 0);
+    return cart.items.reduce((sum: number, ci: { quantity: number }) => {
+      return sum + ci.quantity;
+    }, 0);
   }
 
   if (!guestId) return null;
@@ -589,7 +591,9 @@ export const cartItemsAction = async () => {
   });
 
   if (!guestCart) return null
-  return guestCart.items.reduce<number>((sum, ci) => sum + ci.quantity, 0);
+  return guestCart.items.reduce((sum: number, ci: { quantity: number }) => {
+  return sum + ci.quantity;
+}, 0);
 
 };
 
