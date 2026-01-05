@@ -16,13 +16,21 @@ import { useEffect, useState } from "react";
 import { getAdminItemsAction } from "../../../action/action";
 import ItemReorderList from "./SortingItems";
 
+type AdminItem = {
+  id: string;
+  title: string;
+  price: number;
+  order?: number;
+  imageUrl?: string;
+};
+
 interface IProps {
   categories: { id: string; title: string }[];
 }
 
 export function DropdownMenuRadioGroupDemo({ categories }: IProps) {
   const [selected, setSelected] = React.useState(categories[0]?.id);
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<AdminItem[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

@@ -25,19 +25,24 @@ import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
 
+type Category = {
+  id: string;
+  title: string;
+};
+
 export function ItemDialog({
   categories,
   userId,
 }: {
-  categories: any[];
+  categories: Category[];
   userId: string | null;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const onSubmit = async (values: itemFormValues) => {
     if (!values.image) {
-      // if image is required, make it required in Zod instead
-      throw new Error("Image is required");
+      form.setError("image", { message: "Image is required." });
+      return;
     }
 
     const fd = new FormData();
@@ -46,20 +51,24 @@ export function ItemDialog({
     fd.append("categoryId", values.categoryId);
     fd.append("image", values.image);
     if (userId) fd.append("userId", userId);
+
     await createItemsAction(fd);
+
     setIsOpen(false);
     form.reset();
+
     toast.success("the ITEM has been created successfully.", {
       richColors: true,
       position: "top-center",
     });
+    
   };
 
   const form = useForm<itemFormValues>({
     resolver: zodResolver(itemFormSchema),
     defaultValues: {
       title: "",
-      image: undefined as any,
+      image: undefined,
       price: 0,
       categoryId: "",
     },
@@ -126,7 +135,7 @@ export function ItemDialog({
                           accept="image/*"
                           onChange={(e) => {
                             const file = e.target.files?.[0];
-                            form.setValue("image", file as any, {
+                            form.setValue("image", file, {
                               shouldValidate: true,
                               shouldDirty: true,
                             });

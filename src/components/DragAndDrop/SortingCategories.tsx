@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { DragDropContext, Droppable, Draggable,  type DropResult, } from "@hello-pangea/dnd";
 import { reorderCategoriesAction } from "../../../action/action";
+
 
 interface Category {
   id: string;
@@ -12,7 +13,7 @@ interface Category {
 export default function CategorySortList({ categories }: { categories: Category[] }) {
   const [items, setItems] = useState(categories);
 
-  const onDragEnd = async (result: any) => {
+  const onDragEnd = async (result: DropResult) => {
     if (!result.destination) return;
 
     const reordered = Array.from(items);

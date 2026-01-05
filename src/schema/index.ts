@@ -12,12 +12,13 @@ export const categoryFormSchema = z.object({
 
     image: z
     .instanceof(File, { message: "Please upload an image file." })
-    .refine((f) => f.size > 0, "File is empty.")
+    .optional()
+    .refine((f) => !f || f.size > 0, "File is empty.")
     .refine(
-      (f) => ["image/jpeg", "image/png", "image/webp"].includes(f.type),
+      (f) => !f || ["image/jpeg", "image/png", "image/webp"].includes(f.type),
       "Only JPG/PNG/WebP are allowed."
     )
-    .refine((f) => f.size <= 2 * 1024 * 1024, "Max size is 2MB."),
+    .refine((f) => !f || f.size <= 2 * 1024 * 1024, "Max size is 2MB."),
     });
 
     export const categoryUpdateSchema = z.object({

@@ -26,7 +26,13 @@ import { toast } from "sonner";
 export function CategoryDialog({ userId }: { userId: string | null }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const onSubmit = async (values: { title: string; image: File }) => {
+  const onSubmit = async (values: categoryFormValues) => {
+
+    if (!values.image) {
+      form.setError("image", { message: "Image is required." });
+      return;
+    }
+
     const fd = new FormData();
     fd.append("title", values.title);
     fd.append("image", values.image);
@@ -45,7 +51,7 @@ export function CategoryDialog({ userId }: { userId: string | null }) {
     resolver: zodResolver(categoryFormSchema),
     defaultValues: {
       title: "",
-      image: undefined as any,
+      image: undefined,
     },
     mode: "onChange",
   });
@@ -91,7 +97,7 @@ export function CategoryDialog({ userId }: { userId: string | null }) {
                           accept="image/*"
                           onChange={(e) => {
                             const file = e.target.files?.[0];
-                            form.setValue("image", file as any, {
+                            form.setValue("image", file, {
                               shouldValidate: true,
                               shouldDirty: true,
                             });

@@ -34,19 +34,12 @@ const OrderButtonToast = () => {
   });
 
   const onSubmit = async (values: Values) => {
-    try {
       await placeOrderAction(values); // server action should update cart + create order
       toast.success("Your order was placed successfully.", {
         richColors: true,
         position: "top-center",
       });
       form.reset();
-    } catch (e: any) {
-      toast.error(e?.message ?? "Order failed", {
-        richColors: true,
-        position: "top-center",
-      });
-    }
   };
 
   const { isSignedIn } = useUser();
