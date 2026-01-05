@@ -577,7 +577,8 @@ export const cartItemsAction = async () => {
       where: { userId },
       include: { items: true },
     });
-    return cart?.items.reduce((sum, ci) => sum + ci.quantity, 0) || null;
+    if (!cart) return null;
+    return cart.items.reduce<number>((sum, ci) => sum + ci.quantity, 0);
   }
 
   if (!guestId) return null;
@@ -587,7 +588,9 @@ export const cartItemsAction = async () => {
     include: { items: true },
   });
 
-  return guestCart?.items.reduce((sum, ci) => sum + ci.quantity, 0) || null;
+  if (!guestCart) return null
+  return guestCart.items.reduce<number>((sum, ci) => sum + ci.quantity, 0);
+
 };
 
 
