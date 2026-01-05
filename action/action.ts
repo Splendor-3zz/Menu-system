@@ -679,7 +679,7 @@ export const orderedItemsQuantityAction = async ({
     },
   });
 
-  order?.items.forEach(async (oi) => {
+  order?.items.forEach(async (oi: {itemId: string, quantity: number}) => {
     const item = await prisma.item.findUnique({
       where: {
         id: oi.itemId,
