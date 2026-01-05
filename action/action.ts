@@ -628,7 +628,7 @@ export const placeOrderAction = async ({address, phone}: {address: string, phone
       address,
       phone,
       items: {
-        create: cart.items.map((ci) => ({
+        create: cart.items.map((ci : {itemId: string, quantity: number, item: {price: number}}) => ({
           itemId: ci.itemId,
           quantity: ci.quantity,
           price: ci.item.price,
