@@ -616,7 +616,7 @@ export const placeOrderAction = async ({address, phone}: {address: string, phone
 
   // Compute total
   const total = cart.items.reduce(
-    (sum, ci) => sum + ci.item.price * ci.quantity,
+    (sum: number, ci: {quantity : number; item : {price : number}}) => sum + ci.item.price * ci.quantity,
     0
   );
 
