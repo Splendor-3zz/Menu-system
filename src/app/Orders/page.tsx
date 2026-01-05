@@ -1,6 +1,7 @@
 import {
   getAllOrdersAction,
   getCurrentUserAction,
+  OrdersWithItems,
 } from "../../../action/action";
 import { clerkClient } from "@clerk/nextjs/server";
 import DeleteOrder from "@/components/Order/DeleteOrder";
@@ -18,7 +19,7 @@ const Page = async () => {
     return <div className="p-10 text-red-500">Access denied</div>;
   }
 
-  const orders = await getAllOrdersAction();
+  const orders: OrdersWithItems = await getAllOrdersAction();
 
   // Fetch all Clerk users in ONE batched request
   const userIds = [...new Set(orders.map((o) => o.userId))];
