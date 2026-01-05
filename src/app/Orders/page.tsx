@@ -2,7 +2,6 @@ import {
   getAllOrdersAction,
   getCurrentUserAction,
 } from "../../../action/action";
-import { Role } from "@prisma/client";
 import { clerkClient } from "@clerk/nextjs/server";
 import DeleteOrder from "@/components/Order/DeleteOrder";
 import DoneButton from "@/components/Order/DoneButton";
@@ -15,7 +14,7 @@ export const metadata: Metadata = {
 const Page = async () => {
   const currentUser = await getCurrentUserAction();
 
-  if (currentUser?.role !== Role.ADMIN) {
+  if (currentUser?.role !== "ADMIN") {
     return <div className="p-10 text-red-500">Access denied</div>;
   }
 
