@@ -18,7 +18,7 @@ const Page = async () => {
   }
 
   const total = cart.items.reduce(
-    (sum, cartItem) => sum + cartItem.item.price * cartItem.quantity,
+    (sum: number, cartItem : {quantity: number, item: {price: number}}) => sum + cartItem.item.price * cartItem.quantity,
     0
   );
 
