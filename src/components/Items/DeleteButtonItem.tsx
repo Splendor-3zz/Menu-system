@@ -16,7 +16,7 @@ import { Button } from "../ui/button";
 import { deleteItemsAction } from "../../../action/action";
 import { toast } from "sonner";
 
-const DeleteButtonItem = ({ item }: { item: IItem }) => {
+const DeleteButtonItem = ({ item }: { item: {id: string, imageUrl: string, title: string, price: number, noOfOrders: number, hiden: boolean, categoryId: string} }) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>

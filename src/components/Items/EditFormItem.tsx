@@ -24,7 +24,7 @@ import {
 import { IItem } from "@/interface";
 import { toast } from "sonner";
 
-export function EditFormItem({ item }: { item: IItem }) {
+export function EditFormItem({ item }: { item: {id: string, imageUrl: string, title: string, price: number, noOfOrders: number, hiden: boolean, categoryId: string} }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const onSubmit = async (data: itemEditFormValues) => {

@@ -24,26 +24,26 @@ const Page = async () => {
 
   return (
     <div className="flex flex-col justify-center mx-10 items-center border-2 border-gray-500 p-5">
-      {cart.items.map(({ id, item, quantity }) => (
+      {cart.items.map((ci : { id: string, quantity: number, item: {imageUrl: string, title: string, price: number} }) => (
         <div
-          key={id}
+          key={ci.id}
           className="border-b border-gray-600 p-4 w-full flex justify-between items-center"
         >
           <div className="flex items-center space-x-4">
             <img
-              src={item.imageUrl}
-              alt={item.title}
+              src={ci.item.imageUrl}
+              alt={ci.item.title}
               width={100}
               height={100}
             />
             <div>
-              <h2 className="text-xl">{item.title}</h2>
-              <p>Price: ${item.price}</p>
-              <p>Total: ${item.price * quantity}</p>
+              <h2 className="text-xl">{ci.item.title}</h2>
+              <p>Price: ${ci.item.price}</p>
+              <p>Total: ${ci.item.price * ci.quantity}</p>
             </div>
           </div>
           <div className="flex space-x-3">
-            <EditCart id={id} quantity={quantity} />
+            <EditCart id={ci.id} quantity={ci.quantity} />
           </div>
         </div>
       ))}

@@ -29,7 +29,7 @@ const Category = async () => {
         {!categories.length ? (
           <h1 className="text-3xl m-10">No Items Available</h1>
         ) : (
-          categories.map((category) => (
+          categories.map((category: {id: string, imageUrl: string, title: string, hiden: boolean}) => (
             <div
               key={category.id}
               className="flex justify-center m-5 border-2 border-gray-500 shadow-lg rounded"

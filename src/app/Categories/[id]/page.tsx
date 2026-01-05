@@ -33,7 +33,7 @@ const page = async ({ params }: IProps) => {
       {!items.length ? (
         <h1 className="text-3xl m-10">No Items Available</h1>
       ) : (
-        items.map((item) => (
+        items.map((item: {id: string, imageUrl: string, title: string, price: number, noOfOrders: number, hiden: boolean, categoryId: string}) => (
           <div
             key={item.id}
             className="border-2 border-b-gray-600 m-4 p-4 rounded shadow-lg"

@@ -9,6 +9,8 @@ export interface IItem{
     imageUrl: string
     price: number
     categoryId: string
+    noOfOrders: string
+    hiden: boolean
 
 }
 export interface ICart{
