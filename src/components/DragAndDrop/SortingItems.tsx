@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { DragDropContext, Droppable, Draggable, type DropResult } from "@hello-pangea/dnd";
 import { reorderItemsAction } from "../../../action/action";
 
 interface IProps {
@@ -11,7 +11,7 @@ interface IProps {
 export default function ItemReorderList({ categories }: IProps) {
   const [items, setItems] = useState(categories ?? []);
 
-  const onDragEnd = async (result: any) => {
+  const onDragEnd = async (result: DropResult) => {
     if (!result.destination) return;
 
     const reordered = Array.from(items);
