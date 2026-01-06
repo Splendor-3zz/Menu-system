@@ -11,12 +11,10 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { ShoppingCart } from "lucide-react";
-import { Role } from "@prisma/client";
 import { CategoryDialog } from "../Category/CategoryDialog";
 import AddButton from "../Items/AddButton";
 import { auth } from "@clerk/nextjs/server";
 import {
-  getAllOrdersAction,
   getCurrentUserAction,
 } from "../../../action/action";
 import CartLength from "../Cart/CartLength";
@@ -25,9 +23,8 @@ import OrderCount from "../Order/OrderCount";
 export async function NavigationMenuDemo() {
   const { userId } = await auth();
 
-  const ordersCount = await getAllOrdersAction();
   const currentUser = await getCurrentUserAction();
-  const isAdmin = currentUser?.role === Role.ADMIN;
+  const isAdmin = currentUser?.role === "ADMIN";
 
   return (
     <div className="flex justify-center p-0 m-0">
