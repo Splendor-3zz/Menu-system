@@ -14,7 +14,7 @@ const Home = () => {
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </h6>
-        <Link className="bg-indigo-500 cursor-pointer text-white px-8 pt-1 pb-1.5 m-3 hover:bg-indigo-300 rounded" href={"/CategoryPage"}>
+        <Link className="bg-indigo-500 cursor-pointer text-white px-8 pt-1 pb-1.5 m-3 hover:bg-indigo-300 rounded" href={"/Categories"}>
         order now
         </Link>
       </div>
