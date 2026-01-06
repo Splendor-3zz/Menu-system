@@ -644,17 +644,15 @@ export const placeOrderAction = async ({address, phone}: {address: string, phone
   return order;
 };
 
-export type OrdersWithItems = Prisma.OrderGetPayload<{
-  include: { items: { include: { item: true } } };
-}>[];
-
-export const getAllOrdersAction = async (): Promise<OrdersWithItems> => {
+export const getAllOrdersAction = async () => {
   return await prisma.order.findMany({
-  
+    
     include: { items: { include: { item: true }, },},
     orderBy: { createdAt: "desc" },
   });
 };
+
+export type OrdersWithItems = Prisma.PromiseReturnType<typeof getAllOrdersAction>;
 
 export const deleteOrderAction = async ({ id }: { id: string }) => {
   await prisma.order.delete({
