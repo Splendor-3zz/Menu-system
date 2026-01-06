@@ -19,7 +19,7 @@ interface IProps {
 }
 
 const page = async ({ params }: IProps) => {
-  const { id } = await params;
+  const { id } = params;
 
   const currentUser = await getCurrentUserAction();
   const isAdmin = currentUser?.role === "ADMIN";
