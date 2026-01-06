@@ -10,7 +10,7 @@ const Home = () => {
         <h1 className="font-bold text-2xl text-center text-white bg-indigo-600 sm:w-fit sm:ml-0 m-3 px-3 py-2">
           Meals Near You.
         </h1>
-        <h6 className="sm:w-104 my-5">
+        <h6 className="sm:w-104 mr-3 my-5">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </h6>
