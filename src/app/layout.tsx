@@ -7,7 +7,6 @@ import Nav from "@/components/Headers/Nav";
 import { Toaster } from "@/components/ui/sonner";
 import MergeGuestCartOnLogin from "@/components/Cart/MergeGuestCartOnLogin";
 import Footer from "@/components/Footer/Footer";
-import { url } from "inspector";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
