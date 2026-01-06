@@ -7,6 +7,23 @@ import DeleteOrder from "@/components/Order/DeleteOrder";
 import DoneButton from "@/components/Order/DoneButton";
 import type { Metadata } from "next";
 
+type OrderForAdminPage = {
+  id: string;
+  userId: string;
+  createdAt: Date;
+  address: string;
+  phone: string;
+  total: number;
+  items: Array<{
+    id: string;
+    quantity: number;
+    price: number;
+    item: {
+      title: string;
+    };
+  }>;
+};
+
 export const metadata: Metadata = {
   title: "Orders",
 };
@@ -18,7 +35,7 @@ const Page = async () => {
     return <div className="p-10 text-red-500">Access denied</div>;
   }
 
-  const orders: Awaited<ReturnType<typeof getAllOrdersAction>> = await getAllOrdersAction();
+  const orders: OrderForAdminPage[] = await getAllOrdersAction();
 
   // Fetch all Clerk users in ONE batched request
   const userIds = [...new Set(orders.map((o) => o.userId))];
