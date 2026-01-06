@@ -15,11 +15,11 @@ export const metadata: Metadata = {
 };
 
 interface IProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 const page = async ({ params }: IProps) => {
-  const { id } = params;
+  const { id } = await params;
 
   const currentUser = await getCurrentUserAction();
   const isAdmin = currentUser?.role === "ADMIN";
