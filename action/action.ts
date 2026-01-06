@@ -652,8 +652,6 @@ export const getAllOrdersAction = async () => {
   });
 };
 
-export type OrdersWithItems = Prisma.PromiseReturnType<typeof getAllOrdersAction>;
-
 export const deleteOrderAction = async ({ id }: { id: string }) => {
   await prisma.order.delete({
     where: {
