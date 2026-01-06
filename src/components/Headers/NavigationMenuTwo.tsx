@@ -3,31 +3,14 @@ import Link from "next/link";
 
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { ShoppingCart } from "lucide-react";
-import { Role } from "@prisma/client";
-import { CategoryDialog } from "../Category/CategoryDialog";
-import AddButton from "../Items/AddButton";
-import { auth } from "@clerk/nextjs/server";
-import {
-  getAllOrdersAction,
-  getCurrentUserAction,
-} from "../../../action/action";
-import CartLength from "../Cart/CartLength";
-import OrderCount from "../Order/OrderCount";
 
 export async function NavigationMenuDemoTwo() {
-  const { userId } = await auth();
 
-  const ordersCount = await getAllOrdersAction();
-  const currentUser = await getCurrentUserAction();
-  const isAdmin = currentUser?.role === Role.ADMIN;
 
   return (
     <div className="flex justify-center m-10">
