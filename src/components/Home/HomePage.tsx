@@ -7,7 +7,7 @@ const Home = () => {
     <div className="flex-row justify-center items-center sm:flex mx-5 mt-20">
       <div>
         <h1 className="font-bold text-2xl text-center sm:w-fit ">Delicious & Affordable</h1>
-        <h1 className="font-bold text-2xl text-center text-white bg-indigo-600 sm:w-fit m-3 px-3 py-2">
+        <h1 className="font-bold text-2xl text-center text-white bg-indigo-600 sm:w-fit sm:ml-0 m-3 px-3 py-2">
           Meals Near You.
         </h1>
         <h6 className="sm:w-104 my-5">
@@ -20,8 +20,8 @@ const Home = () => {
       </div>
       <div>
         <Image
-          className="w-fit rounded mx-auto"
-          src={"/food.avif"}
+          className="w-fit rounded mt-5 mb-5 mx-auto"
+          src={"/food.jpg"}
           alt="food"
           width={500}
           height={500}

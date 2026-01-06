@@ -1,9 +1,9 @@
 "use server";
 
 import "dotenv/config";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import path from "path";
 import fs from "fs/promises";
 
@@ -18,12 +18,37 @@ if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 export const getCurrentUserAction = async () => {
   const { userId } = await auth();
   if (!userId) return null;
-  return await prisma.user.findUnique({
-    where: {
+
+  // get email from Clerk to store
+  const client = await clerkClient();
+  const clerkUser = await client.users.getUser(userId);
+  const email = clerkUser.emailAddresses[0]?.emailAddress ?? "";
+  const nameFromClerk =
+    [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(" ").trim() ||
+    clerkUser.username ||
+    clerkUser.fullName ||
+    (email ? email.split("@")[0] : null);
+
+  return await prisma.user.upsert({
+    where: { id: userId },
+    update: { email, title: nameFromClerk }, // keep it synced
+    create: {
       id: userId,
+      email,
+      title: nameFromClerk,
+      role: "USER",
     },
   });
 };
+
+export const getUserAction = async ({id}: {id: string}) => {
+
+  return await prisma.user.findMany({
+    where: {
+      id,
+    }
+  })
+}
 
 // CATEGORIES ACTIONS ...
 
@@ -137,7 +162,7 @@ export const updateCategoriesAction = async (formData: FormData) => {
   //     id: cate.id,
   //   },
   // }),
-    revalidatePath("/CategoryPage");
+    revalidatePath("/Categories");
 };
 
 export const reorderCategoriesAction = async (orderedIds: string[]) => {
@@ -150,7 +175,7 @@ export const reorderCategoriesAction = async (orderedIds: string[]) => {
   );
 
   await Promise.all(updates);
-  revalidatePath("/AdminSortCategories");
+  revalidatePath("/DragAndDrop");
 };
 
 export const getSortedCategoriesAction = async () => {
@@ -251,7 +276,7 @@ export const updateItemOrderAction = async (
     });
   }
 
-  revalidatePath(`/CategoryPage/${categoryId}`);
+  revalidatePath(`/Categories/${categoryId}`);
 };
 
 export const reorderItemsAction = async (orderedIds: string[]) => {
@@ -402,7 +427,7 @@ export const updateItemsAction = async (formData:FormData) => {
       categoryId,
     },
   }),
-    revalidatePath(`/CategoryPage/${categoryId}`);
+    revalidatePath(`/Categories/${categoryId}`);
 };
 
 export const deleteItemsAction = async ({ id }: { id: string }) => {
@@ -647,7 +672,7 @@ export const placeOrderAction = async ({address, phone}: {address: string, phone
 export const getAllOrdersAction = async () => {
   return await prisma.order.findMany({
     
-    include: { items: { include: { item: true }, },},
+    include: { user: true, items: { include: { item: true }, },},
     orderBy: { createdAt: "desc" },
   });
 };

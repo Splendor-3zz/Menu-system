@@ -14,6 +14,9 @@ type OrderForAdminPage = {
   address: string;
   phone: string;
   total: number;
+  user: {
+    title?: string | null;
+  }
   items: Array<{
     id: string;
     quantity: number;
@@ -37,18 +40,6 @@ const Page = async () => {
 
   const orders: OrderForAdminPage[] = await getAllOrdersAction();
 
-  // Fetch all Clerk users in ONE batched request
-  const userIds = [...new Set(orders.map((o) => o.userId))];
-
-  const client = await clerkClient();
-  const users = await client.users.getUserList({
-    userId: userIds,
-    limit: userIds.length,
-  });
-
-  // Make a lookup map for fast access
-  const userMap = new Map(users.data.map((u) => [u.id, u]));
-
   return (
     <div className="p-10">
       <h1 className="text-3xl font-bold mb-6">All Orders</h1>
@@ -58,8 +49,6 @@ const Page = async () => {
       ) : (
         <div className="space-y-8">
           {orders.map((order) => {
-            const user = userMap.get(order.userId);
-
             return (
               <div
                 key={order.id}
@@ -67,10 +56,7 @@ const Page = async () => {
               >
                 <div className="sm:flex justify-between items-center mb-3">
                   <h2 className="text-lg font-semibold">
-                    Order by{" "}
-                    {user
-                      ? user.emailAddresses[0]?.emailAddress
-                      : "Unknown User"}
+                    Order by: {order.user.title ?? "unkown user"}
                   </h2>
                   <span className="text-sm text-gray-500">
                     {new Date(order.createdAt).toLocaleString()}
