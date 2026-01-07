@@ -727,15 +727,12 @@ export const mergeGuestCartIntoUserAction = async () => {
   const { userId } = await auth();
   if (!userId) return;
 
-  const user = await prisma.user.findFirst({
-    where: {
-      role: "ADMIN"
-    },
-  })
-  if (user) {
-    revalidatePath("/");
-    return;
-  }
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  });
+
+  if (user?.role === "ADMIN") return;
 
   const store = await cookies();
   const guestId = store.get(GUEST_COOKIE)?.value ?? null;
@@ -776,7 +773,7 @@ export const mergeGuestCartIntoUserAction = async () => {
 
   store.set(GUEST_COOKIE, "", { path: "/", maxAge: 0 });
 
-  revalidatePath("/Cart");
+  revalidatePath(user?.role === "USER" ? "/Cart" : "/");
 };
 
 
