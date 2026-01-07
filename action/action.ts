@@ -530,7 +530,7 @@ export const updateCartQuantityAction = async (
     where: { id: cartItemId },
     data: { quantity },
   });
-
+  revalidatePath("/Cart")
 };
 
 export const incrementCartItemAction = async (cartItemId: string) => {
@@ -538,6 +538,7 @@ export const incrementCartItemAction = async (cartItemId: string) => {
     where: { id: cartItemId },
     data: { quantity: { increment: 1 } },
   });
+  revalidatePath("/Cart")
 };
 
 export const decrementCartItemAction = async (cartItemId: string) => {
@@ -555,11 +556,12 @@ export const decrementCartItemAction = async (cartItemId: string) => {
   } else {
     await prisma.cartItem.delete({ where: { id: cartItemId } });
   }
-
+  revalidatePath("/Cart")
 };
 
 export const deleteCartAction = async (cartItemId: string) => {
   await prisma.cartItem.delete({ where: { id: cartItemId } });
+  revalidatePath("/Cart")
 };
 
 export const cartItemsAction = async () => {
@@ -653,7 +655,7 @@ export const deleteOrderAction = async ({ id }: { id: string }) => {
       id,
     },
   }),
-    revalidatePath("/");
+    revalidatePath("/Orders");
 };
 
 export const orderedItemsQuantityAction = async ({
@@ -688,23 +690,10 @@ export const orderedItemsQuantityAction = async ({
       },
     });
   });
-  revalidatePath("/");
+  revalidatePath("/Orders");
 };
 
 // ... Marge guest cart to user cart upon sign-in
-
-export const isAdminUser = async () => {
-  const { userId } = await auth();
-  if (!userId) return;
-
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { role: true },
-  });
-
-  if (user?.role === "ADMIN") return revalidatePath("/");
-
-}
 
 export const mergeGuestCartIntoUserAction = async () => {
   const { userId } = await auth();
@@ -756,19 +745,6 @@ export const mergeGuestCartIntoUserAction = async () => {
 
   store.set(GUEST_COOKIE, "", { path: "/", maxAge: 0 });
 
-  revalidatePath(user?.role === "USER" ? "/Cart" : "/");
+  revalidatePath("/Cart");
 };
-
-export const userRole = async () => {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Not authenticated");
-
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { role: true },
-  });
-
-  return user?.role
-}
-
 

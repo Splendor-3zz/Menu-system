@@ -1,8 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getCurrentUserAction } from "../../../action/action";
 
 
-const Home = () => {
+const Home = async () => {
+  const user = await getCurrentUserAction();
+  const adminRole = user?.role === "ADMIN";
   return (
     <div className="flex-row justify-center items-center sm:flex mx-5 mt-20">
       <div>
@@ -15,7 +18,7 @@ const Home = () => {
           eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </h6>
         <Link className="bg-indigo-500 cursor-pointer text-white px-8 pt-1 pb-1.5 m-3 hover:bg-indigo-300 rounded" href={"/Categories"}>
-        order now
+        {adminRole ? "Open Menu" :"order now"}
         </Link>
       </div>
       <div>

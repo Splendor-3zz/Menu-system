@@ -1,12 +1,9 @@
-import { getCurrentUserAction, getSortedCategoriesAction } from "../../../action/action";
+import { getSortedCategoriesAction } from "../../../action/action";
 import CategorySortList from "@/components/DragAndDrop/SortingCategories";
 
 
 
 const page = async () => {
-
-      const user = await getCurrentUserAction();
-  if (user?.role !== "ADMIN") return <div>Access denied</div>;
 
   const categories = await getSortedCategoriesAction();
 

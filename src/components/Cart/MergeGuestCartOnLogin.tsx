@@ -18,7 +18,6 @@ export default function MergeGuestCartOnLogin() {
     (async () => {
       try {
         await mergeGuestCartIntoUserAction();
-        router.refresh();
       } catch {
         // ignore: merge is best-effort
       }
