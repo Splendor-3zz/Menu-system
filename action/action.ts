@@ -292,31 +292,6 @@ export const reorderItemsAction = async (orderedIds: string[]) => {
   revalidatePath("/AdminSortCategories");
 };
 
-// export const createItemsAction = async ({
-//   title,
-//   price,
-//   imageUrl,
-//   userId,
-//   categoryId,
-// }: {
-//   title: string;
-//   price: number;
-//   imageUrl: string;
-//   userId: string | null;
-//   categoryId: string;
-// }) => {
-//   await prisma.item.create({
-//     data: {
-//       title,
-//       price,
-//       imageUrl,
-//       userId: userId as string,
-//       categoryId,
-//     },
-//   }),
-//     revalidatePath("/");
-// };
-
 export const createItemsAction = async (formData : FormData) => {
   const title = formData.get("title");
   const userId = formData.get("userId");
@@ -527,7 +502,6 @@ export const addToCartAction = async (itemId: string) => {
     });
   }
 
-  revalidatePath("/Cart"); // OR "/CartPage" — must match your real route
 };
 
 
@@ -557,7 +531,6 @@ export const updateCartQuantityAction = async (
     data: { quantity },
   });
 
-  revalidatePath("/Cart");
 };
 
 export const incrementCartItemAction = async (cartItemId: string) => {
@@ -565,7 +538,6 @@ export const incrementCartItemAction = async (cartItemId: string) => {
     where: { id: cartItemId },
     data: { quantity: { increment: 1 } },
   });
-  revalidatePath("/Cart");
 };
 
 export const decrementCartItemAction = async (cartItemId: string) => {
@@ -584,12 +556,10 @@ export const decrementCartItemAction = async (cartItemId: string) => {
     await prisma.cartItem.delete({ where: { id: cartItemId } });
   }
 
-  revalidatePath("/Cart");
 };
 
 export const deleteCartAction = async (cartItemId: string) => {
   await prisma.cartItem.delete({ where: { id: cartItemId } });
-  revalidatePath("/Cart");
 };
 
 export const cartItemsAction = async () => {

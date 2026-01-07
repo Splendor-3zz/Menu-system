@@ -39,7 +39,6 @@ const OrderButtonToast = () => {
         richColors: true,
         position: "top-center",
       });
-      form.reset();
   };
 
   const { isSignedIn } = useUser();
@@ -55,16 +54,6 @@ const OrderButtonToast = () => {
   }
 
   return (
-    // <form onSubmit={form.handleSubmit(onSubmit)} className="w-full mt-6 space-y-3">
-    //   <Input placeholder="your address, Only in Istanbul" {...form.register("address")} />
-    //   <Input placeholder="Phone" {...form.register("phone")} />
-    //   <Button
-    //   className="mt-5 bg-green-500 hover:bg-green-400 cursor-pointer"
-    //   type="submit"
-    // >
-    //   Place Order
-    //   </Button>
-    // </form>
     <div>
       <Form {...form}>
         <form
