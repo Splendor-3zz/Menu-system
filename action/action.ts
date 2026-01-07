@@ -629,6 +629,11 @@ export const placeOrderAction = async ({address, phone}: {address: string, phone
   const { userId } = await auth();
   if (!userId) throw new Error("Not authenticated");
 
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  });
+
   // Find cart and items
   const cart = await prisma.cart.findFirst({
     where: { userId },
@@ -665,7 +670,7 @@ export const placeOrderAction = async ({address, phone}: {address: string, phone
   // Clear cart after order
   await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
 
-  revalidatePath("/Cart");
+  revalidatePath(user?.role === "USER" ? "/Cart" : "/");
   return order;
 };
 
@@ -723,6 +728,19 @@ export const orderedItemsQuantityAction = async ({
 
 // ... Marge guest cart to user cart upon sign-in
 
+export const isAdminUser = async () => {
+  const { userId } = await auth();
+  if (!userId) return;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  });
+
+  if (user?.role === "ADMIN") return revalidatePath("/");
+
+}
+
 export const mergeGuestCartIntoUserAction = async () => {
   const { userId } = await auth();
   if (!userId) return;
@@ -773,7 +791,7 @@ export const mergeGuestCartIntoUserAction = async () => {
 
   store.set(GUEST_COOKIE, "", { path: "/", maxAge: 0 });
 
-  revalidatePath("/");
+  revalidatePath(user?.role === "USER" ? "/Cart" : "/");
 };
 
 
