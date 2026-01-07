@@ -773,7 +773,7 @@ export const mergeGuestCartIntoUserAction = async () => {
 
   store.set(GUEST_COOKIE, "", { path: "/", maxAge: 0 });
 
-  revalidatePath(user?.role === "USER" ? "/Cart" : "/");
+  revalidatePath("/");
 };
 
 
