@@ -27,14 +27,14 @@ const Page = async () => {
       {cart.items.map((ci : { id: string, quantity: number, item: {imageUrl: string, title: string, price: number} }) => (
         <div
           key={ci.id}
-          className="border-b border-gray-600 p-4 w-full flex justify-between items-center"
+          className="border-b border-gray-600 py-2 sm:p-4 w-full flex justify-between items-center"
         >
           <div className="flex items-center space-x-4">
             <img
               src={ci.item.imageUrl}
               alt={ci.item.title}
-              width={100}
-              height={100}
+              width={80}
+              height={80}
             />
             <div>
               <h2 className="text-xl">{ci.item.title}</h2>
@@ -42,7 +42,7 @@ const Page = async () => {
               <p>Total: ${ci.item.price * ci.quantity}</p>
             </div>
           </div>
-          <div className="flex space-x-3">
+          <div className="flex sm:space-x-3">
             <EditCart id={ci.id} quantity={ci.quantity} />
           </div>
         </div>
