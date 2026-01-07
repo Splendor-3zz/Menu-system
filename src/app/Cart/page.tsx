@@ -1,7 +1,8 @@
 import EditCart from "@/components/Cart/EditCart";
-import { getCartAction } from "../../../action/action";
+import { getCartAction, userRole } from "../../../action/action";
 import OrderButtonToast from "@/components/Cart/OrderButtonToast";
 import type { Metadata } from "next";
+import HomePage from "@/components/Home/HomePage";
 
 export const metadata: Metadata = {
   title: "Cart",
@@ -12,6 +13,8 @@ export const dynamic = "force-dynamic";
 
 const Page = async () => {
   const cart = await getCartAction();
+
+  if (await userRole() === "ADMIN") return <HomePage />;
 
   if (!cart || !cart.items.length) {
     return <h1 className="text-3xl m-10">Your cart is empty.</h1>;

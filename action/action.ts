@@ -599,11 +599,6 @@ export const placeOrderAction = async ({address, phone}: {address: string, phone
   const { userId } = await auth();
   if (!userId) throw new Error("Not authenticated");
 
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { role: true },
-  });
-
   // Find cart and items
   const cart = await prisma.cart.findFirst({
     where: { userId },
@@ -640,7 +635,7 @@ export const placeOrderAction = async ({address, phone}: {address: string, phone
   // Clear cart after order
   await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
 
-  revalidatePath(user?.role === "USER" ? "/Cart" : "/");
+  revalidatePath("/Cart");
   return order;
 };
 
@@ -763,5 +758,17 @@ export const mergeGuestCartIntoUserAction = async () => {
 
   revalidatePath(user?.role === "USER" ? "/Cart" : "/");
 };
+
+export const userRole = async () => {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Not authenticated");
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  });
+
+  return user?.role
+}
 
 
