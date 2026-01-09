@@ -14,9 +14,9 @@ import { NavigationMenuDemo } from "./NavigationMenu";
 export function DropdownMenuRadioGroupDemo2() {
   return (
     <div>
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button className="w-25" variant="outline">
+          <Button variant="outline">
             <TableOfContents />
           </Button>
         </DropdownMenuTrigger>

@@ -34,23 +34,34 @@ export function DropdownMenuRadioGroupDemo({ categories }: IProps) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-    setItems([]);
 
     const fetchItems = async () => {
+      setLoading(true);
+      setItems([]);
+
       const result = await getAdminItemsAction(selected);
       setItems(result);
+      
+      setLoading(false);
     };
 
     fetchItems();
-    setLoading(false);
   }, [selected]);
+
+  const cate = categories.find((c) => c.id === selected)?.title ?? "Select category";
+
 
   return (
     <div>
-      <DropdownMenu>
+      <div className="mt-5 mb-10">
+        {loading ? (
+          <h1 className="text-3xl m-10">Loading items…</h1>
+        ) : (items.length ? (
+          <div className="flex flex-col justify-center items-center content-center">
+            <h1 className="text-2xl text-center mb-5">Sort Items</h1>
+            <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">Choose a Category</Button>
+          <Button className="" variant="outline">{cate}</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>All Categories</DropdownMenuLabel>
@@ -64,18 +75,14 @@ export function DropdownMenuRadioGroupDemo({ categories }: IProps) {
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-      <div className="mt-5 mb-10">
-        {loading ? (
-          <h1 className="text-xl m-10">Loading items…</h1>
-        ) : items.length ? (
-          <div>
-            <h1 className="text-2xl text-center ">Sort Items</h1>
             {/* IMPORTANT: pass the right prop name */}
-            <ItemReorderList categories={items} />
+            <div className="w-full px-10">
+              <ItemReorderList categories={items} />
+            </div>
           </div>
         ) : (
           <h1 className="text-3xl m-10">There are no items yet…</h1>
-        )}
+        ))}
       </div>
     </div>
   );

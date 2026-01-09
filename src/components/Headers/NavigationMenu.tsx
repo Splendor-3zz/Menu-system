@@ -51,7 +51,8 @@ export async function NavigationMenuDemo() {
               <Link className="w-full sm:w-fit" href="/About">Contact Us</Link>
             </NavigationMenuItem>
             {!isAdmin && (
-              <NavigationMenuItem
+              <div className="hidden sm:flex">
+                <NavigationMenuItem
                 asChild
                 className={navigationMenuTriggerStyle()}
               >
@@ -59,10 +60,11 @@ export async function NavigationMenuDemo() {
                   <ShoppingCart /> <CartLength />
                 </Link>
               </NavigationMenuItem>
+              </div>
             )}
             {isAdmin && (
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="w-full sm:w-fit">Add</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="hidden sm:flex w-full sm:w-fit">Add</NavigationMenuTrigger>
                 <NavigationMenuContent className="z-10" >
                   <ul className="grid w-full">
                     <li className="space-y-1">
