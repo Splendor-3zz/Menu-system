@@ -10,6 +10,13 @@ import fs from "fs/promises";
 import { GUEST_COOKIE } from "@/lib/guestCart";
 import crypto from "crypto";
 import { cookies } from "next/headers";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: 'djpkbgmsh',
+  api_key: '362416419215497',
+  api_secret: 'v9OSvncwpUoB52qJL63SDlhoWfY',
+});
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 const prisma = globalForPrisma.prisma || new PrismaClient();
@@ -70,35 +77,24 @@ export const getCategoriesAction = async () => {
 export const createCategoriesAction = async (formData: FormData) => {
   const title = formData.get("title");
   const userId = formData.get("userId");
-  const image = formData.get("image"); // File
+  const image = formData.get("image");
 
-  if (typeof title !== "string" || !title.trim()) {
-    throw new Error("title is required");
-  }
-  if (typeof userId !== "string" || !userId) {
-    throw new Error("userId is required");
-  }
-  if (!(image instanceof File)) {
-    throw new Error("image file is required");
-  }
-  if (!image.type.startsWith("image/")) {
-    throw new Error("file must be an image");
-  }
+  if (typeof title !== "string" || !title.trim()) throw new Error("title is required");
+  if (typeof userId !== "string" || !userId) throw new Error("userId is required");
+  if (!(image instanceof File)) throw new Error("image file is required");
+  if (!image.type.startsWith("image/")) throw new Error("file must be an image");
 
-  // Write file to /public/uploads
+  // Convert File -> base64 data URI (no fs, no disk writes)
   const bytes = await image.arrayBuffer();
   const buffer = Buffer.from(bytes);
+  const dataUri = `data:${image.type};base64,${buffer.toString("base64")}`;
 
-  const ext = image.name.split(".").pop() || "png";
-  const safeName = `${crypto.randomUUID()}.${ext}`;
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  await fs.mkdir(uploadDir, { recursive: true });
+  const upload = await cloudinary.uploader.upload(dataUri, {
+    folder: "menu/categories",
+    resource_type: "image",
+  });
 
-  const filePath = path.join(uploadDir, safeName);
-  await fs.writeFile(filePath, buffer);
-
-  // This is what you store in DB
-  const imageUrl = `/uploads/${safeName}`;
+  const imageUrl = upload.secure_url;
 
   await prisma.category.create({
     data: {
@@ -107,8 +103,10 @@ export const createCategoriesAction = async (formData: FormData) => {
       userId,
     },
   });
-    revalidatePath("/");
+
+  revalidatePath("/");
 };
+
 export const updateCategoriesAction = async (formData: FormData) => {
 
   const id = formData.get("id");
@@ -292,63 +290,51 @@ export const reorderItemsAction = async (orderedIds: string[]) => {
   revalidatePath("/AdminSortCategories");
 };
 
-export const createItemsAction = async (formData : FormData) => {
+export const createItemsAction = async (formData: FormData) => {
   const title = formData.get("title");
   const userId = formData.get("userId");
   const categoryId = formData.get("categoryId");
-  const image = formData.get("image"); // File
+  const image = formData.get("image");
   const priceRaw = formData.get("price");
 
-if (typeof priceRaw !== "string") {
-  throw new Error("price is required");
-}
+  if (typeof title !== "string" || !title.trim()) throw new Error("title is required");
+  if (typeof userId !== "string" || !userId) throw new Error("userId is required");
+  if (typeof categoryId !== "string" || !categoryId) throw new Error("categoryId is required");
 
-const price = Number(priceRaw);
-if (Number.isNaN(price)) {
-  throw new Error("price must be a number");
-}
+  if (typeof priceRaw !== "string" || !priceRaw.trim()) throw new Error("price is required");
+  const price = Number(priceRaw);
+  if (!Number.isFinite(price) || price < 0) throw new Error("price must be a valid non-negative number");
 
-  if (typeof title !== "string" || !title.trim()) {
-    throw new Error("title is required");
-  }
-  
-  if (typeof categoryId !== "string" || !categoryId) {
-    throw new Error("categoryId is required");
-  }
-  if (typeof userId !== "string" || !userId) {
-    throw new Error("userId is required");
-  }
-  if (!(image instanceof File)) {
-    throw new Error("imageUrl file is required");
-  }
-  if (!image.type.startsWith("image/")) {
-    throw new Error("file must be an image");
-  }
-  // Write file to /public/uploads
- const bytes = await image.arrayBuffer();
+  if (!(image instanceof File)) throw new Error("image file is required");
+  if (!image.type.startsWith("image/")) throw new Error("file must be an image");
+
+  // Optional: basic size limit (e.g., 5MB)
+  const MAX_BYTES = 5 * 1024 * 1024;
+  if (image.size > MAX_BYTES) throw new Error("image too large (max 5MB)");
+
+  // File -> base64 data URI -> Cloudinary upload
+  const bytes = await image.arrayBuffer();
   const buffer = Buffer.from(bytes);
+  const dataUri = `data:${image.type};base64,${buffer.toString("base64")}`;
 
-  const ext = image.name.split(".").pop() || "png";
-  const safeName = `${crypto.randomUUID()}.${ext}`;
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  await fs.mkdir(uploadDir, { recursive: true });
+  const upload = await cloudinary.uploader.upload(dataUri, {
+    folder: "menu/items",
+    resource_type: "image",
+  });
 
-  const filePath = path.join(uploadDir, safeName);
-  await fs.writeFile(filePath, buffer);
-
-  // This is what you store in DB
-  const imageUrl = `/uploads/${safeName}`;
+  const imageUrl = upload.secure_url;
 
   await prisma.item.create({
     data: {
       title: title.trim(),
       price,
       imageUrl,
-      userId: userId as string,
+      userId,
       categoryId,
     },
-  }),
-    revalidatePath("/");
+  });
+
+  revalidatePath("/");
 };
 
 export const updateItemsAction = async (formData:FormData) => {

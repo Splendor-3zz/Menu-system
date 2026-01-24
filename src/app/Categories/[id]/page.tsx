@@ -42,7 +42,7 @@ const page = async ({ params }: IProps) => {
                 <img src={item.imageUrl} alt={"food"} />
               </div>
               <div className="">
-                <h1 className="text-3xl w-50 h-20">{item.title}</h1>
+                <h1 className="text-3xl w-50 h-20 mt-2">{item.title}</h1>
                 <h1>Price : {item.price}$</h1>
                 {isAdmin && (
                   <div>

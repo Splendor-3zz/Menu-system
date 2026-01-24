@@ -45,7 +45,7 @@ const Category = async () => {
                 <div className="flex justify-center  px-2">
                   <Link
                     href={`/Categories/${category.id}`}
-                    className="text-3xl sm:text-5xl hover:text-destructive cursor-pointer "
+                    className="text-3xl sm:text-5xl hover:text-destructive cursor-pointer mt-2"
                   >
                     {category.title}
                   </Link>
